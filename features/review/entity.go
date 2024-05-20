@@ -4,6 +4,7 @@ type Core struct {
 	ID           uint
 	PENGINAPANID uint
 	USERID       uint
+	PESANANID    uint
 	KOMENTAR     string
 	RATING       uint
 	FOTO         string
