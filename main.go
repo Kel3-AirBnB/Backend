@@ -4,6 +4,7 @@ import (
 	configs "airbnb/app/configs"
 	databases "airbnb/app/database"
 	"airbnb/app/migrations"
+	"airbnb/app/routers"
 
 	"github.com/labstack/echo/v4"
 )
@@ -19,6 +20,6 @@ func main() {
 	// }
 
 	e := echo.New()
-	//routers.InitRouter(e, dbMysql, rdb, ctx, ttl)
+	routers.InitRouter(e, dbMysql)
 	e.Logger.Fatal(e.Start(":8080"))
 }

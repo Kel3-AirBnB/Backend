@@ -17,7 +17,6 @@ type UserRequest struct {
 
 func RequestToCore(input UserRequest) user.Core {
 	inputCore := user.Core{
-		ID:           0,
 		Nama:         input.Nama,
 		Email:        input.Email,
 		Password:     input.Password,
