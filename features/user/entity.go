@@ -16,6 +16,7 @@ type Core struct {
 }
 
 type DataInterface interface {
+	Insert(input Core) error
 }
 
 type ServiceInterface interface {
