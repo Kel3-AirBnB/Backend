@@ -10,7 +10,7 @@ type userQuery struct {
 	db *gorm.DB
 }
 
-func new(db *gorm.DB) user.DataInterface {
+func New(db *gorm.DB) user.DataInterface {
 	return &userQuery{
 		db: db,
 	}
