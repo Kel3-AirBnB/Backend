@@ -6,7 +6,7 @@ import (
 
 type Core struct {
 	ID           uint
-	Name         string
+	Nama         string
 	Email        string
 	Password     string
 	NomorTelepon string
