@@ -1,7 +1,7 @@
 package databases
 
 import (
-	configs "airbnb/app/config"
+	configs "airbnb/app/configs"
 	"fmt"
 
 	"gorm.io/driver/mysql"
