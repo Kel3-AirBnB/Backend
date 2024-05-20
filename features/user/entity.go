@@ -20,4 +20,5 @@ type DataInterface interface {
 }
 
 type ServiceInterface interface {
+	Create(input Core) error
 }
