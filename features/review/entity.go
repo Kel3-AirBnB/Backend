@@ -2,12 +2,12 @@ package review
 
 type Core struct {
 	ID           uint
-	PENGINAPANID uint
-	USERID       uint
-	PESANANID    uint
-	KOMENTAR     string
-	RATING       uint
-	FOTO         string
+	PenginapanID uint
+	UserID       uint
+	PesananID    uint
+	Komentar     string
+	Rating       uint
+	Foto         string
 }
 type DataInterface interface {
 }
