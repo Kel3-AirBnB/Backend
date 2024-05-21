@@ -22,6 +22,18 @@ func ResponseProfile(userResponse *user.Core) UserResponse {
 	return result
 }
 
+func CoreToGorm(userGorm user.Core) UserResponse {
+	userCore := UserResponse{
+		ID:           userGorm.ID,
+		Nama:         userGorm.Nama,
+		Email:        userGorm.Email,
+		NomorTelepon: userGorm.NomorTelepon,
+		Foto:         userGorm.Foto,
+	}
+
+	return userCore
+}
+
 func ResponseLogin(userResponse *user.Core) UserResponse {
 	result := UserResponse{
 		ID:    userResponse.ID,

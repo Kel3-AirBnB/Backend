@@ -2,6 +2,7 @@ package routers
 
 import (
 	"airbnb/app/configs"
+	"airbnb/app/middlewares"
 	_userData "airbnb/features/user/data"
 	_userHandler "airbnb/features/user/handler"
 	_userService "airbnb/features/user/service"
@@ -22,4 +23,6 @@ func InitRouter(e *echo.Echo, db *gorm.DB, s3 *s3.S3, cfg *configs.AppConfig, s3
 
 	e.POST("/users", userHandlerAPI.Register)
 	e.POST("/login", userHandlerAPI.Login)
+	e.GET("/profile", userHandlerAPI.Profile, middlewares.JWTMiddleware())
+
 }
