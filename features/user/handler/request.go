@@ -17,6 +17,11 @@ type UserRequest struct {
 	Foto               string `json:"profilepicture" form:"profilepicture"`
 }
 
+type LoginRequest struct {
+	Email    string `json:"email" form:"email"`
+	Password string `json:"password" form:"password"`
+}
+
 func RequestToCore(input UserRequest) user.Core {
 	inputCore := user.Core{
 		Nama:               input.Nama,
@@ -28,9 +33,4 @@ func RequestToCore(input UserRequest) user.Core {
 		Foto:               input.Foto,
 	}
 	return inputCore
-}
-
-type LoginRequest struct {
-	Email    string `json:"email" form:"email"`
-	Password string `json:"password" form:"password"`
 }
