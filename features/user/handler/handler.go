@@ -1,11 +1,13 @@
 package handler
 
 import (
+	"airbnb/app/middlewares"
 	"airbnb/features/user"
 	"airbnb/utils/encrypts"
 	"airbnb/utils/responses"
 	"log"
 	"net/http"
+	"strconv"
 	"strings"
 
 	"github.com/labstack/echo/v4"
@@ -23,77 +25,95 @@ func New(us user.ServiceInterface, hash encrypts.HashInterface) *UserHandler {
 	}
 }
 
-// func (uh *UserHandler) Register(c echo.Context) error {
-// 	log.Print("[Handler Layer]")
-// 	newUser := UserRequest{} // membaca data dari request body
-// 	errBind := c.Bind(&newUser)
-// 	if errBind != nil {
-// 		return c.JSON(http.StatusBadRequest, responses.JSONWebResponse("error bind"+errBind.Error(), nil))
-// 	}
-
-// 	file, handler, err := c.Request().FormFile("profilepicture")
-// 	log.Print("[Handler Layer] file", file)
-// 	log.Print("[Handler Layer] handler", handler)
-// 	if err != nil {
-// 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
-// 			"message": "Unable to upload photo: " + err.Error(),
-// 		})
-// 	}
-// 	defer file.Close()
-
-// 	inputCore := RequestToCore(newUser) // mapping  dari request ke core
-// 	log.Print("[Handler Layer] inputCore", inputCore)
-
-// 	photoURL, err := uh.userService.Create(inputCore, file, handler.Filename)
-// 	//errInsert := uh.userService.Create(inputCore) // memanggil/mengirimkan data ke method service layer
-// 	log.Print("[Handler Layer] photoURL", photoURL)
-// 	if err != nil {
-// 		if strings.Contains(err.Error(), "validation") {
-// 			return c.JSON(http.StatusBadRequest, responses.JSONWebResponse("error add data", err))
-// 		}
-// 		return c.JSON(http.StatusInternalServerError, responses.JSONWebResponse("error add data", err))
-// 	}
-// 	return c.JSON(http.StatusCreated, responses.JSONWebResponse("success add data", photoURL))
-// }
-
 func (uh *UserHandler) Register(c echo.Context) error {
-	log.Print("[Handler Layer]")
 
-	// Bind request body to UserRequest
 	newUser := UserRequest{}
 	errBind := c.Bind(&newUser)
 	if errBind != nil {
 		return c.JSON(http.StatusBadRequest, responses.JSONWebResponse("error bind"+errBind.Error(), nil))
 	}
 
-	// Get file from request
 	file, handler, err := c.Request().FormFile("profilepicture")
 	if err != nil {
-		log.Print("[Handler Layer] Error getting file from request:", err)
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
 			"message": "Unable to upload photo: " + err.Error(),
 		})
 	}
 	defer file.Close()
-
-	log.Print("[Handler Layer] File:", file)
-	log.Print("[Handler Layer] Handler:", handler)
-
-	// Convert UserRequest to Core
 	inputCore := RequestToCore(newUser)
-	log.Print("[Handler Layer] Input Core:", inputCore)
-
-	// Call userService.Create
-	photoURL, err := uh.userService.Create(inputCore, file, handler.Filename)
-	if err != nil {
-		if strings.Contains(err.Error(), "validation") {
-			return c.JSON(http.StatusBadRequest, responses.JSONWebResponse("error add data", err))
+	_, errInsert := uh.userService.Create(inputCore, file, handler.Filename)
+	if errInsert != nil {
+		if strings.Contains(errInsert.Error(), "validation") {
+			return c.JSON(http.StatusBadRequest, responses.JSONWebResponse("error add data", errInsert))
 		}
-		return c.JSON(http.StatusInternalServerError, responses.JSONWebResponse("error add data", err))
+		return c.JSON(http.StatusInternalServerError, responses.JSONWebResponse("error add data", errInsert))
 	}
 
-	log.Print("[Handler Layer] Photo URL:", photoURL)
+	return c.JSON(http.StatusCreated, responses.JSONWebResponse("success add data", nil))
+}
 
-	// Return response
-	return c.JSON(http.StatusCreated, responses.JSONWebResponse("success add data", photoURL))
+func (uh *UserHandler) Login(c echo.Context) error {
+	var reqLoginData = LoginRequest{}
+	errBind := c.Bind(&reqLoginData)
+	if errBind != nil {
+		return c.JSON(http.StatusBadRequest, responses.JSONWebResponse("error bind"+errBind.Error(), nil))
+	}
+	result, token, err := uh.userService.Login(reqLoginData.Email, reqLoginData.Password)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, responses.JSONWebResponse("error login", result))
+	}
+	result.Token = token
+	var resultResponse = ResponseLogin(result)
+	return c.JSON(http.StatusOK, responses.JSONWebResponse("success login", resultResponse))
+}
+
+func (uh *UserHandler) Profile(c echo.Context) error {
+	idToken := middlewares.ExtractTokenUserId(c) // extract id user from jwt token
+	log.Println("idtoken:", idToken)
+	userData, err := uh.userService.GetProfile(uint(idToken)) // Ambil data pengguna dari Redis
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, responses.JSONWebResponse("error get user data", nil))
+	}
+	userResponse := CoreToGorm(*userData)
+	return c.JSON(http.StatusOK, responses.JSONWebResponse("success get profile", userResponse))
+}
+
+func (uh *UserHandler) GetById(c echo.Context) error {
+	id := c.Param("id")
+	idConv, errConv := strconv.Atoi(id)
+	if errConv != nil {
+		return c.JSON(http.StatusBadRequest, responses.JSONWebResponse("error get user id", idConv))
+	}
+
+	userData, err := uh.userService.GetProfile(uint(idConv)) // Ambil data pengguna dari Redis
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, responses.JSONWebResponse("error get user data", nil))
+	}
+	userResponse := CoreToGorm(*userData)
+	return c.JSON(http.StatusOK, responses.JSONWebResponse("success get profile", userResponse))
+}
+
+func (uh *UserHandler) UpdateUserById(c echo.Context) error {
+	idToken := middlewares.ExtractTokenUserId(c)
+	updatedUser := UserRequest{}
+	errBind := c.Bind(&updatedUser)
+	if errBind != nil {
+		return c.JSON(http.StatusBadRequest, responses.JSONWebResponse("error bind"+errBind.Error(), nil))
+	}
+
+	file, handler, err := c.Request().FormFile("profilepicture")
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"message": "Unable to upload photo: " + err.Error(),
+		})
+	}
+	defer file.Close()
+	inputCore := RequestToCore(updatedUser)
+	//uh.userService.Create(inputCore, file, handler.Filename)
+	//inputNewCore := RequestToCore(updatedUser) // mapping  dari request ke core
+	_, errUpdate := uh.userService.UpdateById(uint(idToken), inputCore, file, handler.Filename)
+	if errUpdate != nil {
+		return c.JSON(http.StatusInternalServerError, responses.JSONWebResponse("error update data", errUpdate))
+	}
+	return c.JSON(http.StatusOK, responses.JSONWebResponse("success update data", errUpdate))
 }

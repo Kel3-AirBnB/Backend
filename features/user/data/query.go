@@ -27,3 +27,40 @@ func (u *userQuery) Insert(input user.Core) error {
 	}
 	return nil
 }
+
+func (u *userQuery) SelectByEmail(email string) (*user.Core, error) {
+	var userData User
+	tx := u.db.Where("email = ?", email).First(&userData)
+	if tx.Error != nil {
+		return nil, tx.Error
+	}
+	var usercore = UserGormToUserCore(userData)
+	return &usercore, nil
+}
+
+func (u *userQuery) SelectById(id uint) (*user.Core, error) {
+	var userData User
+	tx := u.db.First(&userData, id)
+	if tx.Error != nil {
+		return nil, tx.Error
+	}
+	var usercore = UserGormToUserCore(userData)
+	// errAddRedis := UserGormToRedis(u.rdb, userData, ttl)
+	// for key, v := range errAddRedis {
+	// 	keyWithPrefix := fmt.Sprint(key)
+	// 	errIns := u.rdb.Set(u.ctx, keyWithPrefix, v, ttl).Err()
+	// 	if errIns != nil {
+	// 		log.Print(errIns)
+	// 	}
+	// }
+	return &usercore, nil
+}
+
+func (u *userQuery) PutById(id uint, input user.Core) error {
+	inputGorm := UserCoreToUserGorm(input)
+	tx := u.db.Model(&User{}).Where("id = ?", id).Updates(&inputGorm)
+	if tx.Error != nil {
+		return tx.Error
+	}
+	return nil
+}
