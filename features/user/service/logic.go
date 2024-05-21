@@ -134,3 +134,10 @@ func (u *userService) UpdateById(id uint, input user.Core, file io.Reader, handl
 	}
 	return input.Foto, nil
 }
+
+func (u *userService) Delete(id uint) error {
+	if id <= 0 {
+		return errors.New("id not valid")
+	}
+	return u.userData.Delete(id)
+}
