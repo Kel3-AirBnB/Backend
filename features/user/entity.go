@@ -1,6 +1,7 @@
 package user
 
 import (
+	"io"
 	"time"
 )
 
@@ -20,5 +21,6 @@ type DataInterface interface {
 }
 
 type ServiceInterface interface {
-	Create(input Core) error
+	Create(input Core, file io.Reader, handlerFilename string) (string, error)
+	UploadFileToS3(file io.Reader, fileName string) (string, error)
 }

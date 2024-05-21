@@ -13,13 +13,8 @@ func main() {
 	cfg := configs.InitConfig()
 	dbMysql := databases.InitDBMysql(cfg)
 	migrations.InitMigrations(dbMysql)
-
-	// rdb, ctx, ttl, err := databases.InitRedis(cfg)
-	// if err != nil {
-	// 	log.Fatalf("failed to initialize redis: %v", err)
-	// }
-
+	s3Client, _ := databases.InitS3(cfg)
 	e := echo.New()
-	routers.InitRouter(e, dbMysql)
+	routers.InitRouter(e, dbMysql, s3Client, cfg)
 	e.Logger.Fatal(e.Start(":8080"))
 }
