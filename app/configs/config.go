@@ -5,10 +5,10 @@ import (
 	"strconv"
 )
 
-// var (
-// 	JWT_SECRET string
-// 	ctx        = context.Background()
-// )
+var (
+	JWT_SECRET string
+	//ctx        = context.Background()
+)
 
 type AppConfig struct {
 	DB_USERNAME string
@@ -38,7 +38,7 @@ func ReadEnv() *AppConfig {
 	}
 	app.DB_PORT = portConv
 	app.DB_NAME = os.Getenv("DBNAME")
-	//JWT_SECRET = os.Getenv("JWTSECRET")
+	JWT_SECRET = os.Getenv("JWTSECRET")
 
 	//redis
 	app.RD_ADDRESS = os.Getenv("RDADDR")

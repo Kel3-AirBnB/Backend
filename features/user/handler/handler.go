@@ -4,7 +4,6 @@ import (
 	"airbnb/features/user"
 	"airbnb/utils/encrypts"
 	"airbnb/utils/responses"
-	"log"
 	"net/http"
 	"strings"
 
@@ -24,7 +23,6 @@ func New(us user.ServiceInterface, hash encrypts.HashInterface) *UserHandler {
 }
 
 func (uh *UserHandler) Register(c echo.Context) error {
-	log.Print("[Handler Layer]")
 
 	newUser := UserRequest{}
 	errBind := c.Bind(&newUser)
@@ -34,7 +32,6 @@ func (uh *UserHandler) Register(c echo.Context) error {
 
 	file, handler, err := c.Request().FormFile("profilepicture")
 	if err != nil {
-		log.Print("[Handler Layer] Error getting file from request:", err)
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
 			"message": "Unable to upload photo: " + err.Error(),
 		})
@@ -50,4 +47,19 @@ func (uh *UserHandler) Register(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusCreated, responses.JSONWebResponse("success add data", nil))
+}
+
+func (uh *UserHandler) Login(c echo.Context) error {
+	var reqLoginData = LoginRequest{}
+	errBind := c.Bind(&reqLoginData)
+	if errBind != nil {
+		return c.JSON(http.StatusBadRequest, responses.JSONWebResponse("error bind"+errBind.Error(), nil))
+	}
+	result, token, err := uh.userService.Login(reqLoginData.Email, reqLoginData.Password)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, responses.JSONWebResponse("error login", result))
+	}
+	result.Token = token
+	var resultResponse = ResponseLogin(result)
+	return c.JSON(http.StatusOK, responses.JSONWebResponse("success login", resultResponse))
 }
