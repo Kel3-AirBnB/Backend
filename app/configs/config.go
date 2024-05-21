@@ -41,13 +41,13 @@ func ReadEnv() *AppConfig {
 	JWT_SECRET = os.Getenv("JWTSECRET")
 
 	//redis
-	app.RD_ADDRESS = os.Getenv("RDADDR")
-	app.RD_PASSWORD = os.Getenv("RDPASS")
-	dbConv, errConv := strconv.Atoi(os.Getenv("RDDB"))
-	if errConv != nil {
-		panic("error convert redis database")
-	}
-	app.RD_DATABASE = dbConv
+	// app.RD_ADDRESS = os.Getenv("RDADDR")
+	// app.RD_PASSWORD = os.Getenv("RDPASS")
+	// dbConv, errConv := strconv.Atoi(os.Getenv("RDDB"))
+	// if errConv != nil {
+	// 	panic("error convert redis database")
+	// }
+	// app.RD_DATABASE = dbConv
 
 	//s3
 	app.S3_BUCKET = os.Getenv("S3BUCKETNAME")
