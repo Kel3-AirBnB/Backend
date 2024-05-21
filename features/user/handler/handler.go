@@ -7,6 +7,7 @@ import (
 	"airbnb/utils/responses"
 	"log"
 	"net/http"
+	"strconv"
 	"strings"
 
 	"github.com/labstack/echo/v4"
@@ -70,6 +71,21 @@ func (uh *UserHandler) Profile(c echo.Context) error {
 	idToken := middlewares.ExtractTokenUserId(c) // extract id user from jwt token
 	log.Println("idtoken:", idToken)
 	userData, err := uh.userService.GetProfile(uint(idToken)) // Ambil data pengguna dari Redis
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, responses.JSONWebResponse("error get user data", nil))
+	}
+	userResponse := CoreToGorm(*userData)
+	return c.JSON(http.StatusOK, responses.JSONWebResponse("success get profile", userResponse))
+}
+
+func (uh *UserHandler) GetById(c echo.Context) error {
+	id := c.Param("id")
+	idConv, errConv := strconv.Atoi(id)
+	if errConv != nil {
+		return c.JSON(http.StatusBadRequest, responses.JSONWebResponse("error get user id", idConv))
+	}
+
+	userData, err := uh.userService.GetProfile(uint(idConv)) // Ambil data pengguna dari Redis
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, responses.JSONWebResponse("error get user data", nil))
 	}

@@ -12,6 +12,7 @@ type Core struct {
 	Password           string
 	KetikUlangPassword string
 	NomorTelepon       string
+	TanggalLahir       string
 	Foto               string
 	Token              string
 	CreatedAt          time.Time

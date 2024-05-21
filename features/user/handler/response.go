@@ -7,17 +7,19 @@ type UserResponse struct {
 	Nama         string `json:"name,omitempty"`
 	Email        string `json:"email,omitempty"`
 	NomorTelepon string `json:"phonenumber,omitempty"`
+	TanggalLahir string `json:"birth,omitempty"`
 	Foto         string `json:"profilepicture,omitempty"`
 	Token        string `json:"token,omitempty"`
 }
 
 func ResponseProfile(userResponse *user.Core) UserResponse {
 	result := UserResponse{
-		ID:    userResponse.ID,
-		Nama:  userResponse.Nama,
-		Email: userResponse.Email,
-		Foto:  userResponse.Foto,
-		Token: userResponse.Token,
+		ID:           userResponse.ID,
+		Nama:         userResponse.Nama,
+		Email:        userResponse.Email,
+		TanggalLahir: userResponse.TanggalLahir,
+		Foto:         userResponse.Foto,
+		Token:        userResponse.Token,
 	}
 	return result
 }
@@ -28,6 +30,7 @@ func CoreToGorm(userGorm user.Core) UserResponse {
 		Nama:         userGorm.Nama,
 		Email:        userGorm.Email,
 		NomorTelepon: userGorm.NomorTelepon,
+		TanggalLahir: userGorm.TanggalLahir,
 		Foto:         userGorm.Foto,
 	}
 

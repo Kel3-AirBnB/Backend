@@ -106,3 +106,18 @@ func (u *userService) GetProfile(id uint) (data *user.Core, err error) {
 	return u.userData.SelectById(id)
 	// }
 }
+
+func (u *userService) GetUserById(id uint) (data *user.Core, err error) {
+	if id <= 0 {
+		return nil, errors.New("[validation] id not valid")
+	}
+	// redisIsFound := u.userData.ValidatedRedis()
+	// log.Printf("[service layer]Rediskey- %v and err- %v\n", len(redisIsFound), err)
+	// if len(redisIsFound) != 0 {
+	// 	fmt.Println(redisIsFound)
+	// 	log.Println("Masuk ke return redis")
+	// 	return u.userData.SelectRedis()
+	// } else {
+	return u.userData.SelectById(id)
+	// }
+}
