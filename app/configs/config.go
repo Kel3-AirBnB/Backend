@@ -20,6 +20,11 @@ type AppConfig struct {
 	RD_ADDRESS  string
 	RD_PASSWORD string
 	RD_DATABASE int
+
+	S3_BUCKET         string
+	S3_REGION         string
+	S3_ACCESKEY       string
+	S3_SECRETACCESKEY string
 }
 
 func ReadEnv() *AppConfig {
@@ -44,6 +49,11 @@ func ReadEnv() *AppConfig {
 	}
 	app.RD_DATABASE = dbConv
 
+	//s3
+	app.S3_BUCKET = os.Getenv("S3BUCKETNAME")
+	app.S3_REGION = os.Getenv("S3REGION")
+	app.S3_ACCESKEY = os.Getenv("S3ACCESKEY")
+	app.S3_SECRETACCESKEY = os.Getenv("S3SECRETACCESKEY")
 	return &app
 }
 
