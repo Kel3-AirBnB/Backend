@@ -25,4 +25,5 @@ func InitRouter(e *echo.Echo, db *gorm.DB, s3 *s3.S3, cfg *configs.AppConfig, s3
 	e.POST("/login", userHandlerAPI.Login)
 	e.GET("/profile", userHandlerAPI.Profile, middlewares.JWTMiddleware())
 	e.GET("/users/:id", userHandlerAPI.GetById)
+	e.PUT("/users", userHandlerAPI.UpdateUserById)
 }

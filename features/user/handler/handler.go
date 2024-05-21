@@ -41,12 +41,12 @@ func (uh *UserHandler) Register(c echo.Context) error {
 	}
 	defer file.Close()
 	inputCore := RequestToCore(newUser)
-	uh.userService.Create(inputCore, file, handler.Filename)
-	if err != nil {
-		if strings.Contains(err.Error(), "validation") {
-			return c.JSON(http.StatusBadRequest, responses.JSONWebResponse("error add data", err))
+	_, errInsert := uh.userService.Create(inputCore, file, handler.Filename)
+	if errInsert != nil {
+		if strings.Contains(errInsert.Error(), "validation") {
+			return c.JSON(http.StatusBadRequest, responses.JSONWebResponse("error add data", errInsert))
 		}
-		return c.JSON(http.StatusInternalServerError, responses.JSONWebResponse("error add data", err))
+		return c.JSON(http.StatusInternalServerError, responses.JSONWebResponse("error add data", errInsert))
 	}
 
 	return c.JSON(http.StatusCreated, responses.JSONWebResponse("success add data", nil))
@@ -91,4 +91,29 @@ func (uh *UserHandler) GetById(c echo.Context) error {
 	}
 	userResponse := CoreToGorm(*userData)
 	return c.JSON(http.StatusOK, responses.JSONWebResponse("success get profile", userResponse))
+}
+
+func (uh *UserHandler) UpdateUserById(c echo.Context) error {
+	idToken := middlewares.ExtractTokenUserId(c)
+	updatedUser := UserRequest{}
+	errBind := c.Bind(&updatedUser)
+	if errBind != nil {
+		return c.JSON(http.StatusBadRequest, responses.JSONWebResponse("error bind"+errBind.Error(), nil))
+	}
+
+	file, handler, err := c.Request().FormFile("profilepicture")
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"message": "Unable to upload photo: " + err.Error(),
+		})
+	}
+	defer file.Close()
+	inputCore := RequestToCore(updatedUser)
+	//uh.userService.Create(inputCore, file, handler.Filename)
+	//inputNewCore := RequestToCore(updatedUser) // mapping  dari request ke core
+	_, errUpdate := uh.userService.UpdateById(uint(idToken), inputCore, file, handler.Filename)
+	if errUpdate != nil {
+		return c.JSON(http.StatusInternalServerError, responses.JSONWebResponse("error update data", errUpdate))
+	}
+	return c.JSON(http.StatusOK, responses.JSONWebResponse("success update data", errUpdate))
 }

@@ -107,17 +107,30 @@ func (u *userService) GetProfile(id uint) (data *user.Core, err error) {
 	// }
 }
 
-func (u *userService) GetUserById(id uint) (data *user.Core, err error) {
+func (u *userService) UpdateById(id uint, input user.Core, file io.Reader, handlerFilename string) (string, error) {
 	if id <= 0 {
-		return nil, errors.New("[validation] id not valid")
+		return "", errors.New("id not valid")
+	} else if input.Nama == "" || input.Email == "" || input.Password == "" {
+		return "", errors.New("nama/email/password tidak boleh kosong")
 	}
-	// redisIsFound := u.userData.ValidatedRedis()
-	// log.Printf("[service layer]Rediskey- %v and err- %v\n", len(redisIsFound), err)
-	// if len(redisIsFound) != 0 {
-	// 	fmt.Println(redisIsFound)
-	// 	log.Println("Masuk ke return redis")
-	// 	return u.userData.SelectRedis()
-	// } else {
-	return u.userData.SelectById(id)
-	// }
+	if input.Password != "" {
+		result, errHash := u.hashService.HashPassword(input.Password)
+		if errHash != nil {
+			return "", errHash
+		}
+		input.Password = result
+	}
+	timestamp := time.Now().Unix()
+	fileName := fmt.Sprintf("%d_%s", timestamp, handlerFilename)
+	photoFileName, errPhoto := u.UploadFileToS3(file, fileName)
+	if errPhoto != nil {
+		return "", errPhoto
+	}
+	input.Foto = fmt.Sprintf("https://%s.s3.amazonaws.com/%s", u.s3Bucket, photoFileName)
+
+	err := u.userData.PutById(id, input)
+	if err != nil {
+		return "", err
+	}
+	return input.Foto, nil
 }
