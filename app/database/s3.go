@@ -2,6 +2,7 @@ package databases
 
 import (
 	configs "airbnb/app/configs"
+	"log"
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/credentials"
@@ -16,7 +17,7 @@ func InitS3(cfg *configs.AppConfig) (*s3.S3, string) {
 	})
 	if err != nil {
 		panic(err)
-		// log.Fatalf("Failed to create AWS session: %v", err)
+		log.Fatalf("Failed to create AWS session: %v", err)
 	}
 	s3Client := s3.New(sess)
 	return s3Client, cfg.S3_BUCKET
