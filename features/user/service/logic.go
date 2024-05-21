@@ -1,6 +1,7 @@
 package service
 
 import (
+	"airbnb/app/middlewares"
 	"airbnb/features/user"
 	"airbnb/utils/encrypts"
 	"bytes"
@@ -33,6 +34,9 @@ func (u *userService) Create(input user.Core, file io.Reader, handlerFilename st
 	if input.Nama == "" || input.Email == "" || input.Password == "" {
 		return "", errors.New("[validation] nama/email/password tidak boleh kosong")
 	}
+	if input.Password != input.KetikUlangPassword {
+		return "", errors.New("[validation] password dan ketik ulang password berbeda")
+	}
 	if input.Password != "" {
 		result, errHash := u.hashService.HashPassword(input.Password)
 		if errHash != nil {
@@ -40,7 +44,6 @@ func (u *userService) Create(input user.Core, file io.Reader, handlerFilename st
 		}
 		input.Password = result
 	}
-
 	timestamp := time.Now().Unix()
 	fileName := fmt.Sprintf("%d_%s", timestamp, handlerFilename)
 	photoFileName, errPhoto := u.UploadFileToS3(file, fileName)
@@ -70,5 +73,21 @@ func (u *userService) UploadFileToS3(file io.Reader, fileName string) (string, e
 	if err != nil {
 		return "", err
 	}
-	return fmt.Sprintf("https://%s.s3.%s.amazonaws.com/%s", u.s3Bucket, aws.StringValue(u.s3.Config.Region), fileName), nil
+	return fmt.Sprintf("https://%s.s3.%s.amazonaws.com/%s", u.s3Bucket, aws.StringValue(u.s3.Config.Region), fileName), err
+}
+
+func (u *userService) Login(email string, password string) (data *user.Core, token string, err error) {
+	data, err = u.userData.SelectByEmail(email)
+	if err != nil {
+		return nil, "", err
+	}
+	isLoginValid := u.hashService.CheckPasswordHash(data.Password, password)
+	if !isLoginValid {
+		return nil, "", errors.New("[validation] password tidak sesuai")
+	}
+	token, errJWT := middlewares.CreateToken(int(data.ID))
+	if errJWT != nil {
+		return nil, "", errJWT
+	}
+	return data, token, nil
 }

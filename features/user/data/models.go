@@ -25,3 +25,17 @@ func UserCoreToUserGorm(userCore user.Core) User {
 	}
 	return userGorm
 }
+
+func UserGormToUserCore(userGorm User) user.Core {
+	userCore := user.Core{
+		ID:           userGorm.ID,
+		Nama:         userGorm.Nama,
+		Email:        userGorm.Email,
+		Password:     userGorm.Password,
+		NomorTelepon: userGorm.NomorTelepon,
+		Foto:         userGorm.Foto,
+		CreatedAt:    userGorm.CreatedAt,
+		UpdatedAt:    userGorm.UpdatedAt,
+	}
+	return userCore
+}

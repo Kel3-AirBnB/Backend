@@ -21,4 +21,5 @@ func InitRouter(e *echo.Echo, db *gorm.DB, s3 *s3.S3, cfg *configs.AppConfig, s3
 	userHandlerAPI := _userHandler.New(userService, hashService)
 
 	e.POST("/users", userHandlerAPI.Register)
+	e.POST("/login", userHandlerAPI.Login)
 }
