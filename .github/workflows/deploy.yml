@@ -49,8 +49,8 @@ jobs:
               -e DBHOST=${{ secrets.DBHOST }} \
               -e DBPORT=${{ secrets.DBPORT }} \
               -e DBNAME=${{ secrets.DBNAME }} \
-              -e S3_BUCKET=${{ secrets.S3BUCKETNAME }} \
-              -e S3_REGION=${{ secrets.S3REGION }} \
-              -e S3_ACCESSKEY=${{ secrets.S3ACCESKEY }} \
-              -e S3_SECRETACCESSKEY=${{ secrets.S3SECRETACCESKEY }} \
+              -e S3BUCKETNAME=${{ secrets.S3BUCKETNAME }} \
+              -e S3REGION=${{ secrets.S3REGION }} \
+              -e S3ACCESKEY=${{ secrets.S3ACCESKEY }} \
+              -e S3SECRETACCESKEY=${{ secrets.S3SECRETACCESKEY }} \
               --name becontainer ${{ secrets.DOCKERHUB_USERNAME }}/be-images:latest
