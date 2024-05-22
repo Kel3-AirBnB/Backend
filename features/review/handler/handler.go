@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"airbnb/app/middlewares"
 	"airbnb/features/review"
 	"airbnb/utils/responses"
 	"net/http"
@@ -82,4 +83,12 @@ func (rh *ReviewHandler) GetById(c echo.Context) error {
 	}
 	reviewsResponse := CoreToGorm(*reviewData)
 	return c.JSON(http.StatusOK, responses.JSONWebResponse("success get review", reviewsResponse))
+}
+func (rh *ReviewHandler) Delete(c echo.Context) error {
+	idToken := middlewares.ExtractTokenUserId(c)
+	err := rh.reviewService.Delete(uint(idToken))
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, responses.JSONWebResponse("error delete data", err))
+	}
+	return c.JSON(http.StatusOK, responses.JSONWebResponse("success delete data", err))
 }
