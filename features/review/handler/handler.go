@@ -2,7 +2,9 @@ package handler
 
 import (
 	"airbnb/features/review"
+	"airbnb/utils/responses"
 	"net/http"
+	"strings"
 
 	"github.com/labstack/echo/v4"
 )
@@ -40,4 +42,29 @@ func (rh *ReviewHandler) GetAll(c echo.Context) error {
 		"message": "success read data",
 		"results": allReviewsResponse,
 	})
+}
+func (rh *ReviewHandler) CreateReview(c echo.Context) error {
+	newReview := ReviewRequest{}
+	errBind := c.Bind(&newReview)
+	if errBind != nil {
+		return c.JSON(http.StatusBadRequest, responses.JSONWebResponse("error bind"+errBind.Error(), nil))
+	}
+
+	file, handler, err := c.Request().FormFile("review_profile")
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"message": "Unable to upload photo: " + err.Error(),
+		})
+	}
+	defer file.Close()
+	inputCore := RequestToCore(newReview)
+	_, errInsert := rh.reviewService.Create(inputCore, file, handler.Filename)
+	if errInsert != nil {
+		if strings.Contains(errInsert.Error(), "validation") {
+			return c.JSON(http.StatusBadRequest, responses.JSONWebResponse("error add data", errInsert))
+		}
+		return c.JSON(http.StatusInternalServerError, responses.JSONWebResponse("error add data", errInsert))
+	}
+
+	return c.JSON(http.StatusCreated, responses.JSONWebResponse("success add data", nil))
 }

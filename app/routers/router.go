@@ -28,7 +28,7 @@ func InitRouter(e *echo.Echo, db *gorm.DB, s3 *s3.S3, cfg *configs.AppConfig, s3
 
 	//review
 	reviewData := data.New(db)
-	reviewService := service.New(reviewData)
+	reviewService := service.New(reviewData, s3, s3Bucket)
 	reviewHandlerAPI := handler.New(reviewService)
 
 	e.POST("/users", userHandlerAPI.Register)
@@ -40,5 +40,6 @@ func InitRouter(e *echo.Echo, db *gorm.DB, s3 *s3.S3, cfg *configs.AppConfig, s3
 
 	//review
 	e.GET("/reviews", reviewHandlerAPI.GetAll)
+	e.POST("/reviews", reviewHandlerAPI.CreateReview)
 
 }
