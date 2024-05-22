@@ -2,9 +2,10 @@ package data
 
 import "gorm.io/gorm"
 
-type homeStay struct {
+type HomeStay struct {
 	gorm.Model
 	ID        uint
+	UserID    uint
 	Name      string
 	Rating    string
 	Foto      string
