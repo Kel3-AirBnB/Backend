@@ -6,8 +6,8 @@ type Core struct {
 	ID               uint
 	UserID           uint
 	PenginapanID     uint
-	CheckIn          string
-	CheckOut         string
+	CheckIn          time.Time
+	CheckOut         time.Time
 	JenisTransaksi   string
 	StatusPembayaran string
 	CreatedAt        time.Time
@@ -15,7 +15,9 @@ type Core struct {
 }
 
 type DataInterface interface {
+	Insert(input Core) error
 }
 
 type ServiceInterface interface {
+	Create(input Core) error
 }
