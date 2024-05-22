@@ -49,5 +49,6 @@ func InitRouter(e *echo.Echo, db *gorm.DB, s3 *s3.S3, cfg *configs.AppConfig, s3
 	e.GET("/reviews", reviewHandlerAPI.GetAll)
 	e.POST("/reviews", reviewHandlerAPI.CreateReview)
 	e.GET("/reviews/:id", reviewHandlerAPI.GetById)
+	e.DELETE("/reviews", reviewHandlerAPI.Delete)
 
 }

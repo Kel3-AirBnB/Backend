@@ -18,6 +18,14 @@ type reviewService struct {
 	s3BucketName string
 }
 
+// Delete implements review.ServiceInterface.
+func (r *reviewService) Delete(id uint) error {
+	if id <= 0 {
+		return errors.New("id not valid")
+	}
+	return r.reviewData.Delete(id)
+}
+
 // GetReviews implements review.ServiceInterface.
 func (r *reviewService) GetReviews(id uint) (data *review.Core, err error) {
 	if id <= 0 {
