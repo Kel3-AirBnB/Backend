@@ -10,6 +10,18 @@ type reviewQuery struct {
 	db *gorm.DB
 }
 
+// SelectById implements review.DataInterface.
+func (r *reviewQuery) SelectById(id uint) (*review.Core, error) {
+	var reviewData Review
+	tx := r.db.First(&reviewData, id)
+	if tx.Error != nil {
+		return nil, tx.Error
+	}
+	var reviewcore = ReviewGormToReviewCore(reviewData)
+
+	return &reviewcore, nil
+}
+
 // Insert implements review.DataInterface.
 func (r *reviewQuery) Insert(input review.Core) error {
 	userGorm := ReviewCoreToUserGorm(input)
