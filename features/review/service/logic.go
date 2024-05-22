@@ -3,6 +3,7 @@ package service
 import (
 	"airbnb/features/review"
 	"bytes"
+	"errors"
 	"fmt"
 	"io"
 	"time"
@@ -15,6 +16,14 @@ type reviewService struct {
 	reviewData   review.DataInterface
 	s3           *s3.S3
 	s3BucketName string
+}
+
+// GetReviews implements review.ServiceInterface.
+func (r *reviewService) GetReviews(id uint) (data *review.Core, err error) {
+	if id <= 0 {
+		return nil, errors.New("[validation] id not valid")
+	}
+	return r.reviewData.SelectById(id)
 }
 
 // Create implements review.ServiceInterface.

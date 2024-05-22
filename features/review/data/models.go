@@ -29,3 +29,17 @@ func ReviewCoreToUserGorm(reviewCore review.Core) Review {
 	}
 	return reviewGorm
 }
+func ReviewGormToReviewCore(reviewGorm Review) review.Core {
+	reviewCore := review.Core{
+		ID:           reviewGorm.ID,
+		PenginapanID: reviewGorm.PenginapanID,
+		UserID:       reviewGorm.UserID,
+		PesananID:    reviewGorm.PesananID,
+		Komentar:     reviewGorm.Komentar,
+		Rating:       reviewGorm.Rating,
+		Foto:         reviewGorm.Foto,
+		CreatedAt:    reviewGorm.CreatedAt,
+		UpdatedAt:    reviewGorm.UpdatedAt,
+	}
+	return reviewCore
+}

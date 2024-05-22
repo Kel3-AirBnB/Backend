@@ -4,6 +4,7 @@ import (
 	"airbnb/features/review"
 	"airbnb/utils/responses"
 	"net/http"
+	"strconv"
 	"strings"
 
 	"github.com/labstack/echo/v4"
@@ -67,4 +68,18 @@ func (rh *ReviewHandler) CreateReview(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusCreated, responses.JSONWebResponse("success add data", nil))
+}
+func (rh *ReviewHandler) GetById(c echo.Context) error {
+	id := c.Param("id")
+	idConv, errConv := strconv.Atoi(id)
+	if errConv != nil {
+		return c.JSON(http.StatusBadRequest, responses.JSONWebResponse("error get reviews id", idConv))
+	}
+
+	reviewData, err := rh.reviewService.GetReviews(uint(idConv)) // Ambil data pengguna dari Redis
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, responses.JSONWebResponse("error get reviews data", nil))
+	}
+	reviewsResponse := CoreToGorm(*reviewData)
+	return c.JSON(http.StatusOK, responses.JSONWebResponse("success get review", reviewsResponse))
 }
