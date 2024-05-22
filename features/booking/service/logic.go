@@ -17,15 +17,15 @@ func New(bd booking.DataInterface, ud user.DataInterface) booking.ServiceInterfa
 	}
 }
 
-// func (s *bookingService) Create(input booking.Core) error {
-// 	_, errID := s.userData.SelectById(input.UserID)
-// 	if errID != nil {
-// 		return errID
-// 	}
+func (s *bookingService) Create(input booking.Core) error {
+	_, errID := s.userData.SelectById(input.UserID)
+	if errID != nil {
+		return errID
+	}
 
-// 	err := s.bookingData.Insert(input)
-// 	if err != nil {
-// 		return err
-// 	}
-// 	return nil
-// }
+	err := s.bookingData.Insert(input)
+	if err != nil {
+		return err
+	}
+	return nil
+}

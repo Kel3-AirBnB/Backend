@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"airbnb/features/booking"
 	"time"
 
 	"gorm.io/gorm"
@@ -15,13 +16,14 @@ type BookingRequest struct {
 	JenisTransaksi string    `json:"jenis_transaksi" form:"jenis_transaksi"`
 }
 
-// func GormToCore(input BookingRequest) booking.Core {
-// 	exportCore := booking.Core{
-// 		UserID:         input.UserID,
-// 		PenginapanID:   input.PenginapanID,
-// 		CheckIn:        input.Checkin,
-// 		CheckOut:       input.CheckIn,
-// 		JenisTransaksi: input.JenisTransaksi,
-// 	}
-// 	return exportCore
-// }
+func GormToCore(input BookingRequest) booking.Core {
+
+	exportCore := booking.Core{
+		UserID:         input.UserID,
+		PenginapanID:   input.PenginapanID,
+		CheckIn:        input.CheckIn,
+		CheckOut:       input.CheckIn,
+		JenisTransaksi: input.JenisTransaksi,
+	}
+	return exportCore
+}
