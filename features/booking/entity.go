@@ -6,8 +6,8 @@ type Core struct {
 	ID               uint
 	UserID           uint
 	PenginapanID     uint
-	CheckIn          time.Time
-	CheckOut         time.Time
+	CheckIn          string
+	CheckOut         string
 	JenisTransaksi   string
 	StatusPembayaran string
 	CreatedAt        time.Time

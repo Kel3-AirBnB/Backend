@@ -33,7 +33,7 @@ func (uh *UserHandler) Register(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, responses.JSONWebResponse("error bind"+errBind.Error(), nil))
 	}
 
-	file, handler, err := c.Request().FormFile("profilepicture")
+	file, handler, err := c.Request().FormFile("foto")
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
 			"message": "Unable to upload photo: " + err.Error(),
