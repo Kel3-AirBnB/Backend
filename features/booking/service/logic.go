@@ -29,6 +29,7 @@ func (s *bookingService) Create(input booking.Core) error {
 
 	err := s.bookingData.Insert(input)
 	if err != nil {
+		log.Print("Err Insert Service Layer", err)
 		return err
 	}
 	return nil
