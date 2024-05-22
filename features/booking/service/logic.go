@@ -3,6 +3,7 @@ package service
 import (
 	"airbnb/features/booking"
 	"airbnb/features/user"
+	"log"
 )
 
 type bookingService struct {
@@ -20,6 +21,7 @@ func New(bd booking.DataInterface, ud user.DataInterface) booking.ServiceInterfa
 func (s *bookingService) Create(input booking.Core) error {
 	_, errID := s.userData.SelectById(input.UserID)
 	if errID != nil {
+		log.Print("Err Select By ID Service Layer", errID)
 		return errID
 	}
 

@@ -23,6 +23,7 @@ func New(bs booking.ServiceInterface) *BookingHandler {
 
 func (h *BookingHandler) Create(c echo.Context) error {
 	id := c.Param("id")
+	log.Println("idparam:", id)
 	idConv, errConv := strconv.Atoi(id)
 	if errConv != nil {
 		return c.JSON(http.StatusBadRequest, responses.JSONWebResponse("error get user id", idConv))
