@@ -10,6 +10,16 @@ type reviewQuery struct {
 	db *gorm.DB
 }
 
+// Insert implements review.DataInterface.
+func (r *reviewQuery) Insert(input review.Core) error {
+	userGorm := ReviewCoreToUserGorm(input)
+	tx := r.db.Create(&userGorm)
+	if tx.Error != nil {
+		return tx.Error
+	}
+	return nil
+}
+
 // SelectAll implements review.DataInterface.
 func (r *reviewQuery) SelectAll() ([]review.Core, error) {
 	var allReviews []Review

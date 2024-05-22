@@ -1,6 +1,9 @@
 package review
 
-import "time"
+import (
+	"io"
+	"time"
+)
 
 type Core struct {
 	ID           uint
@@ -15,8 +18,10 @@ type Core struct {
 }
 type DataInterface interface {
 	SelectAll() ([]Core, error)
+	Insert(input Core) error
 }
 
 type ServiceInterface interface {
 	GetAll() ([]Core, error)
+	Create(input Core, file io.Reader, handlerFilename string) (string, error)
 }
