@@ -4,10 +4,10 @@ import "airbnb/features/user"
 
 type UserResponse struct {
 	ID           uint   `json:"id,omitempty"`
-	Nama         string `json:"name,omitempty"`
+	Nama         string `json:"nama,omitempty"`
 	Email        string `json:"email,omitempty"`
-	TanggalLahir string `json:"birth,omitempty"`
-	Foto         string `json:"profilepicture,omitempty"`
+	TanggalLahir string `json:"tanggal lahir,omitempty"`
+	Foto         string `json:"foto,omitempty"`
 	Token        string `json:"token,omitempty"`
 }
 
