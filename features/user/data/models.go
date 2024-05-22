@@ -11,7 +11,6 @@ type User struct {
 	Nama         string `json:"name" form:"name"`
 	Email        string `gorm:"unique" json:"email" form:"email"`
 	Password     string `json:"password" form:"password"`
-	NomorTelepon string `gorm:"unique" json:"phonenumber" form:"phonenumber"`
 	TanggalLahir string `json:"birth" form:"birth"`
 	Foto         string `json:"profilepicture" form:"profilepicture"`
 }
@@ -21,7 +20,6 @@ func UserCoreToUserGorm(userCore user.Core) User {
 		Nama:         userCore.Nama,
 		Email:        userCore.Email,
 		Password:     userCore.Password,
-		NomorTelepon: userCore.NomorTelepon,
 		TanggalLahir: userCore.TanggalLahir,
 		Foto:         userCore.Foto,
 	}
@@ -34,7 +32,6 @@ func UserGormToUserCore(userGorm User) user.Core {
 		Nama:         userGorm.Nama,
 		Email:        userGorm.Email,
 		Password:     userGorm.Password,
-		NomorTelepon: userGorm.NomorTelepon,
 		TanggalLahir: userGorm.TanggalLahir,
 		Foto:         userGorm.Foto,
 		CreatedAt:    userGorm.CreatedAt,

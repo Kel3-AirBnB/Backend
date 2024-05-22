@@ -6,7 +6,6 @@ type UserResponse struct {
 	ID           uint   `json:"id,omitempty"`
 	Nama         string `json:"name,omitempty"`
 	Email        string `json:"email,omitempty"`
-	NomorTelepon string `json:"phonenumber,omitempty"`
 	TanggalLahir string `json:"birth,omitempty"`
 	Foto         string `json:"profilepicture,omitempty"`
 	Token        string `json:"token,omitempty"`
@@ -29,7 +28,6 @@ func CoreToGorm(userGorm user.Core) UserResponse {
 		ID:           userGorm.ID,
 		Nama:         userGorm.Nama,
 		Email:        userGorm.Email,
-		NomorTelepon: userGorm.NomorTelepon,
 		TanggalLahir: userGorm.TanggalLahir,
 		Foto:         userGorm.Foto,
 	}

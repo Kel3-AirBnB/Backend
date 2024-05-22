@@ -50,7 +50,7 @@ func (u *userService) Create(input user.Core, file io.Reader, handlerFilename st
 	if errPhoto != nil {
 		return "", errPhoto
 	}
-	input.Foto = fmt.Sprintf("https://%s.s3.amazonaws.com/%s", u.s3Bucket, photoFileName)
+	input.Foto = photoFileName
 	err := u.userData.Insert(input)
 	if err != nil {
 		return "", err
