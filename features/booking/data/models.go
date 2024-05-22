@@ -17,6 +17,7 @@ type Booking struct {
 	StatusPembayaran string    `json:"status_pembayaran" form:"status_pembayaran"`
 }
 
+// awd
 func CoreToGorm(input booking.Core) Booking {
 	projectGorm := Booking{
 		UserID:         input.UserID,
