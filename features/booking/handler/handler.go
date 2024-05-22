@@ -4,7 +4,7 @@ import (
 	"airbnb/app/middlewares"
 	"airbnb/features/booking"
 	"airbnb/utils/responses"
-	"log"
+	"fmt"
 	"net/http"
 	"strconv"
 
@@ -22,15 +22,16 @@ func New(bs booking.ServiceInterface) *BookingHandler {
 }
 
 func (h *BookingHandler) Create(c echo.Context) error {
+	fmt.Println("--- [Handler Layer] ---")
 	id := c.Param("id")
-	log.Println("idparam:", id)
 	idConv, errConv := strconv.Atoi(id)
 	if errConv != nil {
 		return c.JSON(http.StatusBadRequest, responses.JSONWebResponse("error get user id", idConv))
 	}
+	fmt.Println("[Handler Layer] idparam:", idConv)
 
 	idToken := middlewares.ExtractTokenUserId(c)
-	log.Println("idtoken:", idToken)
+	fmt.Println("[Handler Layer] idtoken:", idToken)
 
 	newBooking := BookingRequest{}
 	errBind := c.Bind(&newBooking)
