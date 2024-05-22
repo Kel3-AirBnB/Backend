@@ -12,7 +12,6 @@ type UserRequest struct {
 	Email              string `gorm:"unique" json:"email" form:"email"`
 	Password           string `json:"password" form:"password"`
 	KetikUlangPassword string `json:"retypepassword" form:"retypepassword"`
-	NomorTelepon       string `gorm:"unique" json:"phonenumber" form:"phonenumber"`
 	TanggalLahir       string `json:"birth" form:"birth"`
 	Foto               string `json:"profilepicture" form:"profilepicture"`
 }
@@ -28,7 +27,6 @@ func RequestToCore(input UserRequest) user.Core {
 		Email:              input.Email,
 		Password:           input.Password,
 		KetikUlangPassword: input.KetikUlangPassword,
-		NomorTelepon:       input.NomorTelepon,
 		TanggalLahir:       input.TanggalLahir,
 		Foto:               input.Foto,
 	}

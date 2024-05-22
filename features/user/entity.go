@@ -11,7 +11,6 @@ type Core struct {
 	Email              string
 	Password           string
 	KetikUlangPassword string
-	NomorTelepon       string
 	TanggalLahir       string
 	Foto               string
 	Token              string
