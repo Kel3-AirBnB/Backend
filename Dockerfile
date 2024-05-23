@@ -12,11 +12,6 @@ COPY ./ /app
 
 RUN go mod tidy
 
-RUN go build -o airbnbv1.2
+RUN go build -o airbnbv1
 
-# CMD [ "./airbnbv1.2" ]
-# Tambahkan langkah debug untuk memeriksa apakah environment variable ada
-CMD echo "Starting app with env variables:" && \
-    echo "DBUSER=${DBUSER}" && \
-    echo "S3BUCKETNAME=${S3BUCKETNAME}" && \
-    ./airbnbv1.2
+CMD [ "./airbnbv1" ]
