@@ -1,7 +1,7 @@
 package booking
 
 import (
-	homestay "airbnb/features/homeStay"
+	homestay "airbnb/features/homestay"
 	"time"
 )
 

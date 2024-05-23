@@ -2,8 +2,8 @@ package data
 
 import (
 	"airbnb/features/booking"
-	homestay "airbnb/features/homeStay"
-	"airbnb/features/homeStay/data"
+	homestay "airbnb/features/homestay"
+	"airbnb/features/homestay/data"
 	"log"
 
 	"gorm.io/gorm"

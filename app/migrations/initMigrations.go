@@ -2,7 +2,7 @@ package migrations
 
 import (
 	_dataBooking "airbnb/features/booking/data"
-	_dataHomestay "airbnb/features/homeStay/data"
+	_dataHomestay "airbnb/features/homestay/data"
 	_dataReview "airbnb/features/review/data"
 	_dataUser "airbnb/features/user/data"
 
