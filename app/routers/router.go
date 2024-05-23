@@ -36,7 +36,7 @@ func InitRouter(e *echo.Echo, db *gorm.DB, s3 *s3.S3, cfg *configs.AppConfig, s3
 	userHandlerAPI := _userHandler.New(userService, hashService)
 
 	bookingData := _bookingData.New(db)
-	bookingService := _bookingService.New(bookingData, userData)
+	bookingService := _bookingService.New(bookingData, userData, helperService)
 	bookingHanlderAPI := _bookingHandler.New(bookingService, helperService)
 
 	homestayData := _homestayData.New(db)
@@ -62,7 +62,7 @@ func InitRouter(e *echo.Echo, db *gorm.DB, s3 *s3.S3, cfg *configs.AppConfig, s3
 
 	e.POST("/booking/:id", bookingHanlderAPI.Create)
 	e.GET("/booking/:id", bookingHanlderAPI.GetBookById)
-	e.GET("/bookings/:id", bookingHanlderAPI.BookById)
+	e.POST("/booking/payment/:id", bookingHanlderAPI.BookById)
 	//review
 	e.GET("/reviews", reviewHandlerAPI.GetAll)
 	e.POST("/reviews", reviewHandlerAPI.CreateReview)
