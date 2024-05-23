@@ -68,6 +68,8 @@ func (h *BookingHandler) BookById(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, responses.JSONWebResponse("error get homeData data", nil))
 	}
 
+	result, err := h.bookingService.Payment(bookingData, homeData, idConv, idToken)
+
 	projectResponse := BookingResponses(*bookingData, *homeData)
 	return c.JSON(http.StatusOK, responses.JSONWebResponse("success get detail project", projectResponse))
 }

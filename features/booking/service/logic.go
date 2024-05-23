@@ -4,6 +4,7 @@ import (
 	"airbnb/features/booking"
 	"airbnb/features/homestay"
 	"airbnb/features/user"
+	"airbnb/utils/helper"
 	"errors"
 	"log"
 )
@@ -11,12 +12,14 @@ import (
 type bookingService struct {
 	bookingData booking.DataInterface
 	userData    user.DataInterface
+	helper      helper.HelperInterface
 }
 
-func New(bd booking.DataInterface, ud user.DataInterface) booking.ServiceInterface {
+func New(bd booking.DataInterface, ud user.DataInterface, hp helper.HelperInterface) booking.ServiceInterface {
 	return &bookingService{
 		bookingData: bd,
 		userData:    ud,
+		helper:      hp,
 	}
 }
 
@@ -53,4 +56,18 @@ func (p *bookingService) GetBookingById(id uint, userid uint) (data *booking.Cor
 		return nil, errors.New("[validation] home id not valid")
 	}
 	return p.bookingData.SelectById(id, userid)
+}
+
+func (p *bookingService) Payment(id uint, userid uint, input booking.Core) error {
+	if id <= 0 {
+		return errors.New("id not valid")
+	}
+
+	// totalHari, nil := p.helper.GetTotalDay(input.CheckIn, input.CheckOut)
+	// input.TotalTransaksi = totalHari *
+	// err := p.bookingData.Payment(id, input)
+	// if err != nil {
+	// 	return err
+	// }
+	return nil
 }
