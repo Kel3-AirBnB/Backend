@@ -33,15 +33,8 @@ func (uh *UserHandler) Register(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, responses.JSONWebResponse("error bind"+errBind.Error(), nil))
 	}
 
-	file, handler, err := c.Request().FormFile("foto")
-	if err != nil {
-		return c.JSON(http.StatusBadRequest, map[string]interface{}{
-			"message": "Unable to upload photo: " + err.Error(),
-		})
-	}
-	defer file.Close()
 	inputCore := RequestToCore(newUser)
-	_, errInsert := uh.userService.Create(inputCore, file, handler.Filename)
+	_, errInsert := uh.userService.Create(inputCore)
 	if errInsert != nil {
 		if strings.Contains(errInsert.Error(), "validation") {
 			return c.JSON(http.StatusBadRequest, responses.JSONWebResponse("error add data", errInsert))

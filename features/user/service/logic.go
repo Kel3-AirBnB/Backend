@@ -30,7 +30,7 @@ func New(ud user.DataInterface, hash encrypts.HashInterface, s3 *s3.S3, s3Bucket
 	}
 }
 
-func (u *userService) Create(input user.Core, file io.Reader, handlerFilename string) (string, error) {
+func (u *userService) Create(input user.Core) (string, error) {
 	if input.Nama == "" || input.Email == "" || input.Password == "" {
 		return "", errors.New("[validation] nama/email/password tidak boleh kosong")
 	}
@@ -44,13 +44,8 @@ func (u *userService) Create(input user.Core, file io.Reader, handlerFilename st
 		}
 		input.Password = result
 	}
-	timestamp := time.Now().Unix()
-	fileName := fmt.Sprintf("%d_%s", timestamp, handlerFilename)
-	photoFileName, errPhoto := u.UploadFileToS3(file, fileName)
-	if errPhoto != nil {
-		return "", errPhoto
-	}
-	input.Foto = photoFileName
+	defaultPhoto := "https://air-bnb.s3.ap-southeast-2.amazonaws.com/default-pp.jpg"
+	input.Foto = defaultPhoto
 	err := u.userData.Insert(input)
 	if err != nil {
 		return "", err
@@ -126,7 +121,7 @@ func (u *userService) UpdateById(id uint, input user.Core, file io.Reader, handl
 	if errPhoto != nil {
 		return "", errPhoto
 	}
-	input.Foto = fmt.Sprintf("https://%s.s3.amazonaws.com/%s", u.s3Bucket, photoFileName)
+	input.Foto = photoFileName
 
 	err := u.userData.PutById(id, input)
 	if err != nil {
