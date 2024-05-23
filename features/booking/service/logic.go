@@ -83,3 +83,10 @@ func (p *bookingService) Payment(id int, userid int, input booking.Core, checkin
 	}
 	return "", nil
 }
+
+func (p *bookingService) GetAll(userid uint) ([]booking.Core, error) {
+	if userid <= 0 {
+		return nil, errors.New("[validation] id not valid")
+	}
+	return p.bookingData.SelectAll(userid)
+}

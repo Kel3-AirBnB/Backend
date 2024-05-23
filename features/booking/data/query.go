@@ -64,3 +64,23 @@ func (p *bookingQuery) Payment(id int, input booking.Core) error {
 	}
 	return nil
 }
+
+func (p *bookingQuery) SelectAll(userid uint) ([]booking.Core, error) {
+	var allProject []Booking // var penampung data yg dibaca dari db
+	tx := p.db.Where("user_id = ?", userid).Find(&allProject)
+	if tx.Error != nil {
+		return nil, tx.Error
+	}
+	//mapping
+	var allProjectCore []booking.Core
+	for _, v := range allProject {
+		allProjectCore = append(allProjectCore, booking.Core{
+			ID:             v.ID,
+			CheckIn:        v.CheckIn,
+			CheckOut:       v.CheckOut,
+			TotalTransaksi: v.TotalTransaksi,
+			JenisTransaksi: v.JenisTransaksi,
+		})
+	}
+	return allProjectCore, nil
+}

@@ -60,10 +60,11 @@ func InitRouter(e *echo.Echo, db *gorm.DB, s3 *s3.S3, cfg *configs.AppConfig, s3
 	e.GET("/homestay/:id", homestayHandlerAPI.GetById)
 	e.GET("/homestay", homestayHandlerAPI.Delete)
 
-	e.POST("/booking/:id", bookingHanlderAPI.Create)     //membuat pesanan
-	e.GET("/booking/:id", bookingHanlderAPI.GetBookById) //cek status pesanan dengan id pesanan dan user / jwt
-	e.POST("/payment/:id", bookingHanlderAPI.BookById)   //melakukan pembayaran
-	e.GET("/payment/:id", bookingHanlderAPI.GetBookById) //Mendapatkan invoices
+	e.POST("/booking/:id", bookingHanlderAPI.Create)           //membuat pesanan
+	e.GET("/booking/:id", bookingHanlderAPI.GetBookById)       //cek status pesanan dengan id pesanan dan user / jwt
+	e.POST("/payment/:id", bookingHanlderAPI.BookById)         //melakukan pembayaran
+	e.GET("/payment/:id", bookingHanlderAPI.GetBookById)       //Mendapatkan invoices
+	e.GET("/historyuser", bookingHanlderAPI.GetAllHistoryUser) //Mendapatkan hitory user
 
 	//review
 	e.GET("/reviews", reviewHandlerAPI.GetAll)

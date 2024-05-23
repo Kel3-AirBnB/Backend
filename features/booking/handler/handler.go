@@ -130,3 +130,28 @@ func (h *BookingHandler) GetInvoiceById(c echo.Context) error {
 	fmt.Println("[Handler Layer] Total Transaksi: ", projectResponse.TotalTransaksi)
 	return c.JSON(http.StatusOK, responses.JSONWebResponse("success get detail project", projectResponse))
 }
+
+func (h *BookingHandler) GetAllHistoryUser(c echo.Context) error {
+	idToken := middlewares.ExtractTokenUserId(c) // extract id user from jwt token
+	log.Println("idtoken:", idToken)
+
+	result, err := h.bookingService.GetAll(uint(idToken))
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, responses.JSONWebResponse("error read data", nil))
+	}
+
+	var allHistory []BookingResponse
+
+	for _, value := range result {
+		allHistory = append(allHistory, BookingResponse{
+			ID: value.ID,
+			// NamaPenginapan:   value.NamaPenginapan,
+			CheckIn:          value.CheckIn,
+			CheckOut:         value.CheckOut,
+			TotalTransaksi:   value.TotalTransaksi,
+			JenisTransaksi:   value.JenisTransaksi,
+			StatusPembayaran: value.StatusPembayaran,
+		})
+	}
+	return c.JSON(http.StatusOK, responses.JSONWebResponse("success read data", allHistory))
+}
