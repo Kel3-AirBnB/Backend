@@ -3,10 +3,12 @@ package main
 import (
 	configs "airbnb/app/configs"
 	databases "airbnb/app/database"
+	"airbnb/app/middlewares"
 	"airbnb/app/migrations"
 	"airbnb/app/routers"
 
 	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
 )
 
 func main() {
@@ -17,5 +19,6 @@ func main() {
 
 	e := echo.New()
 	routers.InitRouter(e, dbMysql, s3Client, cfg, s3Bucket)
+	e.Use(middleware.CORSWithConfig(middlewares.CORSConfig()))
 	e.Logger.Fatal(e.Start(":8080"))
 }
