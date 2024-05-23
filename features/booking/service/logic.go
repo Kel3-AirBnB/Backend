@@ -58,16 +58,16 @@ func (p *bookingService) GetBookingById(id uint, userid uint) (data *booking.Cor
 	return p.bookingData.SelectById(id, userid)
 }
 
-func (p *bookingService) Payment(id uint, userid uint, input booking.Core) error {
-	if id <= 0 {
-		return errors.New("id not valid")
-	}
+// func (p *bookingService) Payment(id uint, userid uint, input booking.Core) error {
+// 	if id <= 0 {
+// 		return errors.New("id not valid")
+// 	}
 
-	// totalHari, nil := p.helper.GetTotalDay(input.CheckIn, input.CheckOut)
-	// input.TotalTransaksi = totalHari *
-	// err := p.bookingData.Payment(id, input)
-	// if err != nil {
-	// 	return err
-	// }
-	return nil
-}
+// 	// totalHari, nil := p.helper.GetTotalDay(input.CheckIn, input.CheckOut)
+// 	// input.TotalTransaksi = totalHari *
+// 	// err := p.bookingData.Payment(id, input)
+// 	// if err != nil {
+// 	// 	return err
+// 	// }
+// 	return nil
+// }
