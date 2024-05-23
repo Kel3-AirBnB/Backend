@@ -8,9 +8,9 @@ COPY go.mod ./
 
 COPY go.sum ./
 
-COPY ./ /app
-
 RUN go mod tidy
+
+COPY ./ /app
 
 RUN go build -o airbnbv1
 

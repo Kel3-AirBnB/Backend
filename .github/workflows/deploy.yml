@@ -27,6 +27,7 @@ jobs:
           file: ./Dockerfile
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/be-images:latest
+          no-cache: true  # Tambahkan ini untuk menghindari cache
 
   deploy-prod:
     runs-on: ubuntu-latest
