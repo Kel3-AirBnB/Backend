@@ -1,6 +1,6 @@
 package handler
 
-import "airbnb/features/homestay"
+import homestay "airbnb/features/homeStay"
 
 type HomeStayResponse struct {
 	ID        uint   `json:"id"`
