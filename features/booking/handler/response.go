@@ -2,7 +2,7 @@ package handler
 
 import (
 	"airbnb/features/booking"
-	homestay "airbnb/features/homestay"
+	"airbnb/features/homestay"
 )
 
 type BookingResponse struct {
