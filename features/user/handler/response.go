@@ -6,7 +6,7 @@ type UserResponse struct {
 	ID           uint   `json:"id,omitempty"`
 	Nama         string `json:"nama,omitempty"`
 	Email        string `json:"email,omitempty"`
-	TanggalLahir string `json:"tanggal lahir,omitempty"`
+	TanggalLahir string `json:"tanggal_lahir,omitempty"`
 	Foto         string `json:"foto,omitempty"`
 	Token        string `json:"token,omitempty"`
 }
