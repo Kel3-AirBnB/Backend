@@ -41,8 +41,8 @@ jobs:
           key: ${{ secrets.KEY }}
           port: ${{ secrets.PORT }}
           script: |
-            # docker stop becontainer || true
-            # docker rm becontainer || true
+            docker stop becontainer || true
+            docker rm becontainer || true
             docker pull ${{ secrets.DOCKERHUB_USERNAME }}/be-images:latest
             docker run -d -p 80:8080 \
               -e DBUSER=${{ secrets.DBUSER }} \
@@ -54,4 +54,4 @@ jobs:
               -e S3REGION=${{ secrets.S3REGION }} \
               -e S3ACCESKEY=${{ secrets.S3ACCESKEY }} \
               -e S3SECRETACCESKEY=${{ secrets.S3SECRETACCESKEY }} \
-              --name airbnb ${{ secrets.DOCKERHUB_USERNAME }}/be-images:latest
+              --name becontainer ${{ secrets.DOCKERHUB_USERNAME }}/be-images:latest
