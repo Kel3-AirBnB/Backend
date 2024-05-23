@@ -62,7 +62,7 @@ func InitRouter(e *echo.Echo, db *gorm.DB, s3 *s3.S3, cfg *configs.AppConfig, s3
 
 	e.POST("/booking/:id", bookingHanlderAPI.Create)
 	e.GET("/booking/:id", bookingHanlderAPI.GetBookById)
-	e.POST("/booking/payment/:id", bookingHanlderAPI.BookById)
+	e.POST("/payment/:id", bookingHanlderAPI.BookById)
 	//review
 	e.GET("/reviews", reviewHandlerAPI.GetAll)
 	e.POST("/reviews", reviewHandlerAPI.CreateReview)

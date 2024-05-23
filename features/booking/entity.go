@@ -23,10 +23,12 @@ type DataInterface interface {
 	Insert(input Core) error
 	SelectById(id uint, userid uint) (*Core, error)
 	SelectHomeById(id uint) (*homestay.Core, error)
+	Payment(id int, input Core) error
 }
 
 type ServiceInterface interface {
 	Create(input Core) error
 	GetBookingById(id uint, userid uint) (data *Core, err error)
 	GetHomeById(id uint) (data *homestay.Core, err error)
+	Payment(id int, userid int, input Core, checkin string, checkout string, price string) (string, error)
 }

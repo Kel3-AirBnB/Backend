@@ -14,7 +14,22 @@ type BookingRequest struct {
 	CheckOut         string `json:"checkout" form:"checkout"`
 	TotalTransaksi   string
 	JenisTransaksi   string `json:"jenis_transaksi" form:"jenis_transaksi"`
+	StatusPembayaran string `json:"status_pembayaran" form:"status_pembayaran"`
+}
+
+type PaymentRequest struct {
+	JenisTransaksi   string `json:"jenis_transaksi" form:"jenis_transaksi"`
 	StatusPembayaran string
+	TotalTransaksi   string `json:"total_transaksi" form:"total_transaksi"`
+}
+
+func RequestToCore(input PaymentRequest) booking.Core {
+	inputCore := booking.Core{
+		JenisTransaksi:   input.JenisTransaksi,
+		StatusPembayaran: input.StatusPembayaran,
+		TotalTransaksi:   input.TotalTransaksi,
+	}
+	return inputCore
 }
 
 func GormToCore(input BookingRequest) booking.Core {
