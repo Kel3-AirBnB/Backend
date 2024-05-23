@@ -28,7 +28,7 @@ type DataInterface interface {
 }
 
 type ServiceInterface interface {
-	Create(input Core) error
+	Create(input Core, checkin string, checkout string, price string) error
 	GetBookingById(id uint, userid uint) (data *Core, err error)
 	GetHomeById(id uint) (data *homestay.Core, err error)
 	Payment(id int, userid int, input Core, checkin string, checkout string, price string) (string, error)

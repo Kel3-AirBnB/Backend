@@ -4,7 +4,6 @@ import (
 	"airbnb/features/booking"
 	"airbnb/features/homestay"
 	"airbnb/features/homestay/data"
-	"fmt"
 	"log"
 
 	"gorm.io/gorm"
@@ -34,7 +33,6 @@ func (p *bookingQuery) Insert(input booking.Core) error {
 func (p *bookingQuery) SelectById(id uint, userid uint) (*booking.Core, error) {
 	var bookingData Booking
 	tx := p.db.Where("user_id = ?", userid).First(&bookingData, id)
-	fmt.Println("[Data Layer] TotalTransaksi: ", bookingData.TotalTransaksi)
 	if tx.Error != nil {
 		return nil, tx.Error
 	}
@@ -75,11 +73,13 @@ func (p *bookingQuery) SelectAll(userid uint) ([]booking.Core, error) {
 	var allProjectCore []booking.Core
 	for _, v := range allProject {
 		allProjectCore = append(allProjectCore, booking.Core{
-			ID:             v.ID,
-			CheckIn:        v.CheckIn,
-			CheckOut:       v.CheckOut,
-			TotalTransaksi: v.TotalTransaksi,
-			JenisTransaksi: v.JenisTransaksi,
+			ID:               v.ID,
+			PenginapanID:     v.PenginapanID,
+			CheckIn:          v.CheckIn,
+			CheckOut:         v.CheckOut,
+			TotalTransaksi:   v.TotalTransaksi,
+			JenisTransaksi:   v.JenisTransaksi,
+			StatusPembayaran: v.StatusPembayaran,
 		})
 	}
 	return allProjectCore, nil
