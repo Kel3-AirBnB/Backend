@@ -27,7 +27,7 @@ jobs:
           file: ./Dockerfile
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/be-images:latest
-  
+
   deploy-prod:
     runs-on: ubuntu-latest
     needs: docker
