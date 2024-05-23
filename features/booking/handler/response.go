@@ -38,6 +38,7 @@ func SelectResponses(input booking.Core) BookingResponse {
 		PenginapanID:     input.PenginapanID,
 		CheckIn:          input.CheckIn,
 		CheckOut:         input.CheckOut,
+		TotalTransaksi:   input.TotalTransaksi,
 		StatusPembayaran: input.StatusPembayaran,
 	}
 	return result

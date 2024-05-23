@@ -25,12 +25,23 @@ func New(bd booking.DataInterface, ud user.DataInterface, hp helper.HelperInterf
 	}
 }
 
-func (s *bookingService) Create(input booking.Core) error {
+func (s *bookingService) Create(input booking.Core, checkin string, checkout string, price string) error {
 	_, errID := s.userData.SelectById(input.UserID)
 	if errID != nil {
 		log.Print("Err Select By ID Service Layer", errID)
 		return errID
 	}
+
+	totalHari, nil := s.helper.GetTotalDay(checkin, checkout)
+
+	idConv, errConv := strconv.Atoi(price)
+	if errConv != nil {
+		fmt.Println("Error:", errConv)
+		return errConv
+	}
+	totalTransaksi := totalHari * idConv
+
+	input.TotalTransaksi = strconv.Itoa(totalTransaksi)
 
 	err := s.bookingData.Insert(input)
 	if err != nil {
@@ -57,6 +68,7 @@ func (p *bookingService) GetBookingById(id uint, userid uint) (data *booking.Cor
 	if id <= 0 {
 		return nil, errors.New("[validation] home id not valid")
 	}
+
 	return p.bookingData.SelectById(id, userid)
 }
 

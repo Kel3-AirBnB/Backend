@@ -5,7 +5,6 @@ import (
 	"airbnb/features/booking"
 	"airbnb/utils/helper"
 	"airbnb/utils/responses"
-	"fmt"
 	"log"
 	"net/http"
 	"strconv"
@@ -41,7 +40,13 @@ func (h *BookingHandler) Create(c echo.Context) error {
 	newBooking.UserID = uint(idToken)
 	newBooking.PenginapanID = uint(idConv)
 	newBooking.StatusPembayaran = "Belum Dibayar"
-	errInsert := h.bookingService.Create(GormToCore(newBooking))
+
+	homeData, errhomeData := h.bookingService.GetHomeById(newBooking.PenginapanID)
+	if errhomeData != nil {
+		return c.JSON(http.StatusInternalServerError, responses.JSONWebResponse("error get homeData data", nil))
+	}
+
+	errInsert := h.bookingService.Create(GormToCore(newBooking), newBooking.CheckIn, newBooking.CheckOut, homeData.Harga)
 	if errInsert != nil {
 		return c.JSON(http.StatusInternalServerError, responses.JSONWebResponse("error add data", errInsert))
 	}
@@ -124,10 +129,7 @@ func (h *BookingHandler) GetInvoiceById(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, responses.JSONWebResponse("error get homeData data", nil))
 	}
 
-	harga := bookingData.TotalTransaksi
-	fmt.Println("[Handler Layer] harga: ", harga)
 	projectResponse := InvoiceResponse(*bookingData, *homeData)
-	fmt.Println("[Handler Layer] Total Transaksi: ", projectResponse.TotalTransaksi)
 	return c.JSON(http.StatusOK, responses.JSONWebResponse("success get detail project", projectResponse))
 }
 
@@ -141,17 +143,13 @@ func (h *BookingHandler) GetAllHistoryUser(c echo.Context) error {
 	}
 
 	var allHistory []BookingResponse
-
 	for _, value := range result {
-		allHistory = append(allHistory, BookingResponse{
-			ID: value.ID,
-			// NamaPenginapan:   value.NamaPenginapan,
-			CheckIn:          value.CheckIn,
-			CheckOut:         value.CheckOut,
-			TotalTransaksi:   value.TotalTransaksi,
-			JenisTransaksi:   value.JenisTransaksi,
-			StatusPembayaran: value.StatusPembayaran,
-		})
+		homeData, errhomeData := h.bookingService.GetHomeById(value.PenginapanID)
+
+		if errhomeData != nil {
+			return c.JSON(http.StatusInternalServerError, responses.JSONWebResponse("error get homeData data", nil))
+		}
+		allHistory = append(allHistory, InvoiceResponse(value, *homeData))
 	}
 	return c.JSON(http.StatusOK, responses.JSONWebResponse("success read data", allHistory))
 }
