@@ -1,0 +1,929 @@
+openapi: 3.0.0
+servers:
+  # Added by API Auto Mocking Plugin
+  - description: SwaggerHub API Auto Mocking
+    url: https://virtserver.swaggerhub.com/FIRMANADISUSANTOO/cobaApitask2/1.0.0
+  - description: SwaggerHub API Auto Mocking
+    url: Server
+info:
+  version: "1.0.0"
+  title: Air Bnb
+  description: Sebuah Projek
+tags:
+  - name: user
+    description: user
+  - name: penginapan
+    description: Home Stay
+  - name: pemesanan
+    description: Pemesanan 
+  - name: review
+    description: review
+paths:
+  /users:
+    post:
+      tags: 
+        - user
+      description: "Register user"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+            example:
+              nama: "anto"
+              email: "anto@gmail.com"
+              tanggal lahir: "09/05/2022"
+              password: "aabgc"
+              repeat_password: "aabgc"
+      responses:
+        '201':
+          description: "Sukses menambahkan data"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiDataResponse'
+              example:
+                code: 201
+                message: "Berhasil menambahkan data"
+        '400':
+          $ref: '#/components/responses/400'
+        '500':
+          $ref: '#/components/responses/500'
+  /login:
+    post:
+      tags:
+        - user
+      summary: "Login user"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+                  format: password
+            example:
+              email: "anto@gmail.com"
+              password: "anto"
+      responses:
+        '200':
+          description: "Sukses login"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiDataResponse'
+              example: 
+                code: 200
+                message: "Berhasil login"
+                data:
+                  nama: "anto"
+                  email: "anto@gmail.com"
+                  token: "cunsdhshduhsdhfuhyerolsmklnkdsjbcjdhdgfyegfbcvdmkfirfbncmxn"
+        '400':
+          $ref: '#/components/responses/400'
+        '500':
+          $ref: '#/components/responses/500'
+  /users/profil:
+    get:
+      tags:
+        - user
+      security: 
+        - bearerAuth: []
+      summary: "Melihat user profil"
+      description: "Melihat user profil"
+      responses:
+        '200':
+          description: "Success"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiDataResponse'
+              example: 
+                code: 200
+                message: "Berhasil mengambil data pengguna"
+                data:
+                  foto: "jpg/png"
+                  nama: "anto"
+                  email: "anto@gmail.com"
+                  tanggal_lahir: "09/05/2022"
+        '404':
+          description: "User not found"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+              example:
+                code: 404
+                message: "User not found"
+        '500':
+          $ref: '#/components/responses/500'
+  /users/{id}:
+    get:
+      tags:
+        - user
+      security: 
+        - bearerAuth: []
+      summary: "Melihat user"
+      description: "Melihat user berdasarkan id"
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: "Success"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiDataResponse'
+              example: 
+                code: 200
+                message: "Berhasil mengambil data pengguna"
+                data:
+                  id: 1
+                  nama: "anto"
+                  email: "anto@gmail.com"
+                  tanggal_lahir: "09/05/2022"
+        '404':
+          description: "User not found"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+              example:
+                code: 404
+                message: "User not found"
+        '500':
+          $ref: '#/components/responses/500'
+
+  /userss/{id}:
+    put:
+      tags:
+        - user
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      security: 
+        - bearerAuth: []
+      summary: "Update profile user"
+      description: "Update user berdasarkan id"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+            example:
+              nama: "anto"
+              email: "anto@gmail.com"
+              tanggal lahir: "09/05/2022"
+              foto: "jpg/png"
+              password: "aabgc"
+              
+      responses:
+        '200':
+          description: "Berhasil mengubah data"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiDataResponse'
+              example: 
+                code : 200
+                message: "Berhasil mengubah data"
+                data:
+                  nama: "anto1"
+                  email: "anto1@gmail.com"
+                  tanggal lahir: "09/05/2022"
+                  foto: "jpg/png"
+                  password: "qqwwe"
+        '400':
+          $ref: '#/components/responses/400'
+        '500':
+          $ref: '#/components/responses/500'
+    delete:
+      tags:
+        - user
+      summary: "Delete user"
+      description: "Deletes User berdasarkan id"
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: "Berhasil menghapus data"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiDataResponse'
+              example:
+                code: 200
+                message: "Berhasil menghapus data"
+        '500':
+          $ref: '#/components/responses/500'
+  /penginapan:
+    post:
+      tags:
+        - penginapan
+      description: "Menambahkan penginapan baru"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Penginapan'
+            example:
+                - nama: "Villa Bukit Indah"
+                  alamat: "Jl. Raya Puncak No. 123"
+                  rating: "4"
+                  foto: "jpg/png"
+                  deskripsi: "Wi-Fi, Kolam Renang, Parkir"
+                  harga: 500000
+                - nama: "Hotel Melati"
+                  alamat: "Jl. Merdeka No. 45"
+                  rating: "3"
+                  foto: "jpg/png"
+                  deskripsi: "Wi-Fi, AC"
+                  harga: 300000
+      responses:
+        '201':
+          description: "Berhasil menambahkan penginapan"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiDataResponse'
+              example:
+                code: 201
+                message: "Berhasil menambahkan penginapan"
+                data:
+                  id: 1
+                  nama: "Villa Bukit Indah"
+                  alamat: "Jl. Raya Puncak No. 123"
+                  harga: 500000
+                  deskripsi: "Wi-Fi, Kolam Renang, Parkir"
+        '400':
+          $ref: '#/components/responses/400'
+        '500':
+          $ref: '#/components/responses/500'
+    get:
+      tags: 
+        - penginapan
+      description: "Mendapatkan daftar penginapan"
+      responses:
+        '200':
+          description: "Berhasil mendapatkan data penginapan"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Penginapan'
+              example:
+                - id: 1
+                  nama: "Villa Bukit Indah"
+                  alamat: "Jl. Raya Puncak No. 123"
+                  rating: "4"
+                  foto: "jpg/png"
+                  deskripsi: "Wi-Fi, Kolam Renang, Parkir"
+                  harga: 500000
+                - id: 2
+                  nama: "Hotel Melati"
+                  alamat: "Jl. Merdeka No. 45"
+                  rating: "3"
+                  foto: "jpg/png"
+                  deskripsi: "Wi-Fi, AC"
+                  harga: 300000
+        '500':
+          $ref: '#/components/responses/500'
+  /penginapan/{id}:
+    get:
+      tags:
+        - penginapan
+      description: "Mendapatkan detail penginapan"
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: "Berhasil mendapatkan detail penginapan"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Penginapan'
+              example:
+                  id: 1
+                  nama: "Villa Bukit Indah"
+                  alamat: "Jl. Raya Puncak No. 123"
+                  rating: "4"
+                  foto: "jpg/png"
+                  deskripsi: "Wi-Fi, Kolam Renang, Parkir"
+                  harga: 500000
+        '404':
+          description: "Penginapan tidak ditemukan"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+              example:
+                code: 404
+                message: "Penginapan tidak ditemukan"
+        '500':
+          $ref: '#/components/responses/500'
+    put:
+      tags:
+        - penginapan
+      description: "Update detail penginapan"
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Penginapan'
+            example:
+                  nama: "Villa Bukit Indah"
+                  alamat: "Jl. Raya Puncak No. 123"
+                  rating: "4"
+                  foto: "jpg/png"
+                  deskripsi: "Wi-Fi, Kolam Renang, Parkir"
+                  harga: 500000
+      responses:
+        '200':
+          description: "Berhasil mengubah penginapan"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiDataResponse'
+              example:
+                code: 200
+                message: "Berhasil mengubah penginapan"
+                data:
+                  id: 1
+                  nama: "Villa Bukit Indah2"
+                  alamat: "Jl. Raya Puncak No. 1234"
+                  rating: "5"
+                  foto: "jpg/png"
+                  deskripsi: "Wi-Fi, Kolam Renang, Parkir"
+                  harga: 500000
+        '400':
+          $ref: '#/components/responses/400'
+        '404':
+          description: "Penginapan tidak ditemukan"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+              example:
+                code: 404
+                message: "Penginapan tidak ditemukan"
+        '500':
+          $ref: '#/components/responses/500'
+    delete:
+      tags:
+        - penginapan
+      description: "Menghapus penginapan"
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: "Berhasil menghapus penginapan"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiDataResponse'
+              example:
+                code: 200
+                message: "Berhasil menghapus penginapan"
+        '404':
+          description: "Penginapan tidak ditemukan"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+              example:
+                code: 404
+                message: "Penginapan tidak ditemukan"
+        '500':
+          $ref: '#/components/responses/500'
+  /pemesanan:
+    post:
+      tags:
+        - pemesanan
+      description: "Menambahkan pemesanan baru"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Pemesanan'
+            example:
+              nama: "Anto"
+              penginapan: "Villa Bukit Indah"
+              checkin: "01/05/2024"
+              checkout: "03/05/2024"
+              total: 1500000
+      responses:
+        '201':
+          description: "Berhasil menambahkan pemesanan"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiDataResponse'
+              example:
+                code: 201
+                message: "Berhasil menambahkan pemesanan"
+                data:
+                  id: 1
+                  nama: "Anto"
+                  penginapan: "Villa Bukit Indah"
+                  checkin: "01/05/2024"
+                  checkout: "03/05/2024"
+                  total: 1500000
+        '400':
+          $ref: '#/components/responses/400'
+        '500':
+          $ref: '#/components/responses/500'
+  /pemesanan/{id}:
+    get:
+      tags:
+        - pemesanan
+      description: "Mendapatkan detail pemesanan"
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: "Melihat detail pemesanan"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pemesanan'
+              example:
+                  id: 1
+                  nama: "Anto"
+                  penginapan: "Villa Bukit Indah"
+                  checkin: "01/05/2024"
+                  checkout: "03/05/2024"
+                  tipe transaksi: "Transfer"
+                  status pembayaran: "Berhasil"
+                  total: 1500000
+        '404':
+          description: "Pemesanan tidak ditemukan"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+              example:
+                code: 404
+                message: "Pemesanan tidak ditemukan"
+        '500':
+          $ref: '#/components/responses/500'
+    put:
+      tags:
+        - pemesanan
+      description: "Mengubah detail pemesanan"
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Pemesanan'
+            example:
+                  nama: "Anto"
+                  penginapan: "Villa Bukit Indah"
+                  checkin: "01/05/2024"
+                  checkout: "03/05/2024"
+                  total: 1500000
+      responses:
+        '200':
+          description: "Berhasil mengubah pemesanan"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiDataResponse'
+              example:
+                code: 200
+                message: "Berhasil mengubah pemesanan"
+                data:
+                  id: 1
+                  nama: "Anto"
+                  penginapan: "Villa Bukit Indah"
+                  checkin: "01/05/2024"
+                  checkout: "04/05/2024"
+                  total: 2000000
+        '400':
+          $ref: '#/components/responses/400'
+        '404':
+          description: "Pemesanan tidak ditemukan"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+              example:
+                code: 404
+                message: "Pemesanan tidak ditemukan"
+        '500':
+          $ref: '#/components/responses/500'
+    delete:
+      tags:
+        - pemesanan
+      description: "Menghapus pemesanan"
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: "Berhasil menghapus pemesanan"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiDataResponse'
+              example:
+                code: 200
+                message: "Berhasil menghapus pemesanan"
+        '404':
+          description: "Pemesanan tidak ditemukan"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+              example:
+                code: 404
+                message: "Pemesanan tidak ditemukan"
+        '500':
+          $ref: '#/components/responses/500'
+  /reviews:
+    get:
+      tags:
+        - review
+      description: Mendapatkan daftar review
+      responses:
+        '200':
+          description: Berhasil mendapatkan daftar review
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Review'
+              example:
+                - id: 1
+                  penginapan_id: 1
+                  user_id: 1
+                  rating: 5
+                  komentar: "Sangat baik"
+                  foto: "jpg/png"
+                - id: 2
+                  penginapan_id: 2
+                  user_id: 2
+                  rating: 4
+                  komentar: "Bagus"
+                  foto: "jpg/png"
+        '500':
+          $ref: '#/components/responses/500'
+    post:
+      tags:
+        - review
+      description: Menambahkan review baru
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Review'
+            example:
+              penginapan_id: 1
+              user_id: 1
+              rating: 5
+              komentar: "Sangat baik"
+              foto: "jpg/png"
+      responses:
+        '201':
+          description: Berhasil menambahkan review
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiDataResponse'
+              example:
+                code: 201
+                message: "Berhasil menambahkan review"
+                data:
+                  id: 1
+                  penginapan_id: 1
+                  user_id: 1
+                  rating: 5
+                  komentar: "Sangat baik"
+                  foto: "jpg/png"
+        '400':
+          $ref: '#/components/responses/400'
+        '500':
+          $ref: '#/components/responses/500'
+  /reviews/{id}:
+    get:
+      tags:
+        - review
+      description: Mendapatkan detail review
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Berhasil mendapatkan detail review
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Review'
+              example:
+                id: 1
+                penginapan_id: 1
+                user_id: 1
+                rating: 5
+                komentar: "Sangat baik"
+                foto: "jpg/png"
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
+    put:
+      tags:
+        - review
+      description: Mengubah review
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Review'
+            example:
+              rating: 5
+              komentar: "Sangat baik"
+      responses:
+        '200':
+          description: Berhasil mengubah review
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiDataResponse'
+              example:
+                code: 200
+                message: "Berhasil mengubah review"
+                data:
+                  id: 1
+                  penginapan_id: 1
+                  user_id: 1
+                  rating: 4
+                  komentar: "Bagus"
+                  foto: "jpg/png"
+        '400':
+          $ref: '#/components/responses/400'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
+    delete:
+      tags:
+        - review
+      description: Menghapus review
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Berhasil menghapus review
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiDataResponse'
+              example:
+                code: 200
+                message: "Berhasil menghapus review"
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
+components:
+  schemas:
+    User:
+      type: object
+      required:
+        - nama
+        - email
+        - tanggal lahir
+        - foto profil
+        - password
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        nama:
+          type: string
+        email:
+          type: string
+        tanggal lahir:
+          type: string
+        foto profil:
+          type: string
+        password:
+          type: string
+    Penginapan:
+      type: object
+      required:
+        - nama
+        - alamat
+        - rating
+        - foto
+        - deskripsi
+        - harga
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        nama:
+          type: string
+        alamat:
+          type: string
+        rating:
+          type: integer
+        foto:
+          type: string
+        deskripsi:
+          type: string
+        harga:
+          type: integer
+    Pemesanan:
+      type: object
+      required:
+        - nama
+        - penginapan
+        - checkin
+        - checkout
+        - total
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        nama:
+          type: string
+        penginapan:
+          type: string
+        checkin:
+          type: string
+          format: date
+        checkout:
+          type: string
+          format: date
+        total:
+          type: integer
+    Review:
+      type: object
+      required:
+        - penginapan_id
+        - user_id
+        - rating
+        - komentar
+        - foto
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        penginapan_id:
+          type: integer
+        user_id:
+          type: integer
+        rating:
+          type: integer
+          minimum: 1
+          maximum: 5
+        komentar:
+          type: string
+        foto:
+          type: string
+    ApiResponse:
+      type: object
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+    ApiDataResponse:
+      type: object
+      properties:
+        code:
+          type: string
+        data:
+          type: object
+        message:
+          type: string
+  requestBodies:
+    User:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/User'
+      required: true
+    UserArray:
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/User'
+      description: List of user object
+      required: true
+    Penginapan:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Penginapan'
+      required: true
+    Pemesanan:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Pemesanan'
+      required: true
+    Review:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Review'
+      required: true
+  responses:
+    '400':
+      description: "Data yang dikirim tidak sesuai"
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ApiResponse'
+          example: 
+            code: 400
+            message: "Terdapat kesalahan pada data input"
+    '404':
+      description: "Resource tidak ditemukan"
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ApiResponse'
+          example:
+            code: 404
+            message: "Resource tidak ditemukan"
+    '500':
+      description: "Server error"
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ApiResponse'
+          example:
+            code: 500
+            message: "Terjadi kesalahan pada server"
+  securitySchemes:
+    bearerAuth:            
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

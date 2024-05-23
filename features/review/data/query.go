@@ -10,6 +10,38 @@ type reviewQuery struct {
 	db *gorm.DB
 }
 
+// Delete implements review.DataInterface.
+func (r *reviewQuery) Delete(id uint) error {
+	tx := r.db.Delete(&Review{}, id)
+	if tx.Error != nil {
+		return tx.Error
+	}
+	return nil
+
+}
+
+// SelectById implements review.DataInterface.
+func (r *reviewQuery) SelectById(id uint) (*review.Core, error) {
+	var reviewData Review
+	tx := r.db.First(&reviewData, id)
+	if tx.Error != nil {
+		return nil, tx.Error
+	}
+	var reviewcore = ReviewGormToReviewCore(reviewData)
+
+	return &reviewcore, nil
+}
+
+// Insert implements review.DataInterface.
+func (r *reviewQuery) Insert(input review.Core) error {
+	userGorm := ReviewCoreToUserGorm(input)
+	tx := r.db.Create(&userGorm)
+	if tx.Error != nil {
+		return tx.Error
+	}
+	return nil
+}
+
 // SelectAll implements review.DataInterface.
 func (r *reviewQuery) SelectAll() ([]review.Core, error) {
 	var allReviews []Review

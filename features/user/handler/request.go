@@ -8,12 +8,12 @@ import (
 
 type UserRequest struct {
 	gorm.Model
-	Nama               string `json:"name" form:"name"`
+	Nama               string `json:"nama" form:"nama"`
 	Email              string `gorm:"unique" json:"email" form:"email"`
 	Password           string `json:"password" form:"password"`
-	KetikUlangPassword string `json:"retypepassword" form:"retypepassword"`
-	TanggalLahir       string `json:"birth" form:"birth"`
-	Foto               string `json:"profilepicture" form:"profilepicture"`
+	KetikUlangPassword string `json:"repeat_password" form:"repeat_password"`
+	TanggalLahir       string `json:"tanggal_lahir" form:"tanggal_lahir"`
+	Foto               string `json:"foto" form:"foto"`
 }
 
 type LoginRequest struct {

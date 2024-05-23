@@ -8,10 +8,10 @@ COPY go.mod ./
 
 COPY go.sum ./
 
-COPY ./ /app
-
 RUN go mod tidy
 
-RUN go build -o beapi
+COPY ./ /app
 
-CMD [ "./beapi" ]
+RUN go build -o airbnbv1
+
+CMD [ "./airbnbv1" ]
