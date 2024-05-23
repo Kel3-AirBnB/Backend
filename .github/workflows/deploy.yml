@@ -57,3 +57,6 @@ jobs:
               -e S3ACCESKEY=${{ secrets.S3ACCESKEY }} \
               -e S3SECRETACCESKEY=${{ secrets.S3SECRETACCESKEY }} \
               --name airbnb ${{ secrets.DOCKERHUB_USERNAME }}/airbnb-images:latest
+
+      - name: Clear Docker cache
+        run: docker system prune --all --force --volumes
