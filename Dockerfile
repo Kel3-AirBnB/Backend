@@ -12,6 +12,6 @@ RUN go mod tidy
 
 COPY ./ /app
 
-RUN go build -o airbnbv1
+RUN go build -o airbnbv2
 
-CMD [ "./airbnbv1" ]
+CMD [ "./airbnbv2" ]
