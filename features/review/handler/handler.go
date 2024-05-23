@@ -1,7 +1,6 @@
 package handler
 
 import (
-	"airbnb/app/middlewares"
 	"airbnb/features/review"
 	"airbnb/utils/responses"
 	"net/http"
@@ -59,7 +58,9 @@ func (rh *ReviewHandler) CreateReview(c echo.Context) error {
 		})
 	}
 	defer file.Close()
+
 	inputCore := RequestToCore(newReview)
+
 	_, errInsert := rh.reviewService.Create(inputCore, file, handler.Filename)
 	if errInsert != nil {
 		if strings.Contains(errInsert.Error(), "validation") {
@@ -85,10 +86,92 @@ func (rh *ReviewHandler) GetById(c echo.Context) error {
 	return c.JSON(http.StatusOK, responses.JSONWebResponse("success get review", reviewsResponse))
 }
 func (rh *ReviewHandler) Delete(c echo.Context) error {
-	idToken := middlewares.ExtractTokenUserId(c)
-	err := rh.reviewService.Delete(uint(idToken))
+	// id := c.Param("id")
+	id := c.Param("id")
+	idConv, errConv := strconv.Atoi(id)
+	if errConv != nil {
+		return c.JSON(http.StatusBadRequest, responses.JSONWebResponse("error get reviews id", idConv))
+	}
+	// idToken := middlewares.ExtractTokenUserId(c)
+	// err := rh.reviewService.Delete(uint(idToken))
+	err := rh.reviewService.Delete(uint(idConv))
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, responses.JSONWebResponse("error delete data", err))
 	}
 	return c.JSON(http.StatusOK, responses.JSONWebResponse("success delete data", err))
+}
+
+// func (rh *ReviewHandler) UpdateReview(c echo.Context) error {
+// 	id := c.Param("id")
+// 	idConv, errConv := strconv.Atoi(id)
+// 	if errConv != nil {
+// 		return c.JSON(http.StatusBadRequest, map[string]any{
+// 			"status":  "failed",
+// 			"message": "error converting ID: " + errConv.Error(),
+// 		})
+// 	}
+// 	newReview := ReviewRequest{}
+// 	errBind := c.Bind(&newReview)
+// 	if errBind != nil {
+// 		return c.JSON(http.StatusBadRequest, responses.JSONWebResponse("error bind"+errBind.Error(), nil))
+// 	}
+
+// 	file, handler, err := c.Request().FormFile("review_profile")
+// 	if err != nil {
+// 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+// 			"message": "Unable to upload photo: " + err.Error(),
+// 		})
+// 	}
+// 	defer file.Close()
+
+// 	inputCore := RequestToCore(newReview)
+
+// 	// _, errInsert := rh.reviewService.Create(inputCore, file, handler.Filename)
+// 	// _, errUpdate := rh.reviewService.UpdateById(uint(idToken),inputCore, file, handler.Filename)
+// 	_, errUpdate := rh.reviewService.UpdateById(uint(idConv), inputCore, file, handler.Filename)
+// 	if errUpdate != nil {
+// 		if strings.Contains(errUpdate.Error(), "validation") {
+// 			return c.JSON(http.StatusBadRequest, responses.JSONWebResponse("error update data", errUpdate))
+// 		}
+// 		return c.JSON(http.StatusInternalServerError, responses.JSONWebResponse("error update data", errUpdate))
+// 	}
+
+//		return c.JSON(http.StatusCreated, responses.JSONWebResponse("success update data", nil))
+//	}
+func (rh *ReviewHandler) UpdateReview(c echo.Context) error {
+	// Ambil ID ulasan dari URL
+	id := c.Param("id")
+	idConv, errConv := strconv.Atoi(id)
+	if errConv != nil {
+		return c.JSON(http.StatusBadRequest, responses.JSONWebResponse("error converting review ID", nil))
+	}
+
+	// Bind data permintaan ke struct ReviewRequest
+	updateRequest := ReviewRequest{}
+	if err := c.Bind(&updateRequest); err != nil {
+		return c.JSON(http.StatusBadRequest, responses.JSONWebResponse("error binding update data", nil))
+	}
+
+	// Cek apakah ada file yang diunggah
+	file, handler, err := c.Request().FormFile("review_profile")
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"message": "Unable to upload photo: " + err.Error(),
+		})
+	}
+	defer file.Close()
+
+	// Ubah data permintaan menjadi Core struct
+	inputCore := RequestToCore(updateRequest)
+
+	// Panggil layanan untuk melakukan pembaruan ulasan
+	_, errUpdate := rh.reviewService.UpdateById(uint(idConv), inputCore, file, handler.Filename)
+	if errUpdate != nil {
+		if strings.Contains(errUpdate.Error(), "validation") {
+			return c.JSON(http.StatusBadRequest, responses.JSONWebResponse("error update data", errUpdate))
+		}
+		return c.JSON(http.StatusInternalServerError, responses.JSONWebResponse("error update data", errUpdate))
+	}
+
+	return c.JSON(http.StatusCreated, responses.JSONWebResponse("success update data", nil))
 }

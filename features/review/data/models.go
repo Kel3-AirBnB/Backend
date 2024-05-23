@@ -17,7 +17,7 @@ type Review struct {
 	Foto         string
 }
 
-func ReviewCoreToUserGorm(reviewCore review.Core) Review {
+func ReviewCoreToReviewGorm(reviewCore review.Core) Review {
 	reviewGorm := Review{
 
 		PenginapanID: reviewCore.PenginapanID,

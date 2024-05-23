@@ -3,6 +3,8 @@ package configs
 import (
 	"os"
 	"strconv"
+
+	"github.com/joho/godotenv"
 )
 
 var (
@@ -25,10 +27,20 @@ type AppConfig struct {
 	S3_REGION         string
 	S3_ACCESKEY       string
 	S3_SECRETACCESKEY string
+
+	VALIDATLOCALORSERVER string
 }
 
 func ReadEnv() *AppConfig {
 	var app = AppConfig{}
+
+	err := godotenv.Load() // Menambahkan pembacaan ENV file local
+	if err != nil {
+
+		panic("Error loading .env file")
+	}
+	app.VALIDATLOCALORSERVER = os.Getenv("VALIDATLOCALORSERVER")
+
 	app.DB_USERNAME = os.Getenv("DBUSER")
 	app.DB_PASSWORD = os.Getenv("DBPASS")
 	app.DB_HOSTNAME = os.Getenv("DBHOST")
@@ -54,6 +66,7 @@ func ReadEnv() *AppConfig {
 	app.S3_REGION = os.Getenv("S3REGION")
 	app.S3_ACCESKEY = os.Getenv("S3ACCESKEY")
 	app.S3_SECRETACCESKEY = os.Getenv("S3SECRETACCESKEY")
+
 	return &app
 }
 
