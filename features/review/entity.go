@@ -21,6 +21,7 @@ type DataInterface interface {
 	Insert(input Core) error
 	SelectById(id uint) (*Core, error)
 	Delete(id uint) error
+	EditById(id uint, input Core) error
 }
 
 type ServiceInterface interface {
@@ -28,4 +29,5 @@ type ServiceInterface interface {
 	Create(input Core, file io.Reader, handlerFilename string) (string, error)
 	GetReviews(id uint) (data *Core, err error)
 	Delete(id uint) error
+	UpdateById(id uint, input Core, file io.Reader, handlerFilename string) (string, error)
 }

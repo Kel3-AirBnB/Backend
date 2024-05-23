@@ -2,12 +2,44 @@ package data
 
 import (
 	"airbnb/features/review"
+	"time"
 
 	"gorm.io/gorm"
 )
 
 type reviewQuery struct {
 	db *gorm.DB
+}
+
+// EditById implements review.DataInterface.
+func (r *reviewQuery) EditById(id uint, input review.Core) error {
+
+	var existingReview Review
+	if err := r.db.First(&existingReview, id).Error; err != nil {
+		return err
+	}
+
+	// Mengonversi review.Core menjadi ReviewGorm
+	inputGorm := ReviewCoreToReviewGorm(input)
+
+	// Memperbarui nilai-nilai yang diperlukan dengan menggunakan updates
+	updateValues := map[string]interface{}{
+		"penginapan_id": inputGorm.PenginapanID,
+		"user_id":       inputGorm.UserID,
+		"pesanan_id":    inputGorm.PesananID,
+		"komentar":      inputGorm.Komentar,
+		"rating":        inputGorm.Rating,
+		"foto":          inputGorm.Foto,
+		"updated_at":    time.Now(),
+	}
+
+	// Melakukan pembaruan data ulasan menggunakan updates
+	if err := r.db.Model(&existingReview).Updates(updateValues).Error; err != nil {
+		return err
+	}
+
+	return nil
+
 }
 
 // Delete implements review.DataInterface.
@@ -34,7 +66,7 @@ func (r *reviewQuery) SelectById(id uint) (*review.Core, error) {
 
 // Insert implements review.DataInterface.
 func (r *reviewQuery) Insert(input review.Core) error {
-	userGorm := ReviewCoreToUserGorm(input)
+	userGorm := ReviewCoreToReviewGorm(input)
 	tx := r.db.Create(&userGorm)
 	if tx.Error != nil {
 		return tx.Error

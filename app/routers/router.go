@@ -45,7 +45,7 @@ func InitRouter(e *echo.Echo, db *gorm.DB, s3 *s3.S3, cfg *configs.AppConfig, s3
 
 	//review
 	reviewData := data.New(db)
-	reviewService := service.New(reviewData, s3, s3Bucket)
+	reviewService := service.New(reviewData, s3, s3Bucket, cfg.VALIDATLOCALORSERVER)
 	reviewHandlerAPI := handler.New(reviewService)
 
 	e.POST("/users", userHandlerAPI.Register)
@@ -67,6 +67,7 @@ func InitRouter(e *echo.Echo, db *gorm.DB, s3 *s3.S3, cfg *configs.AppConfig, s3
 	e.GET("/reviews", reviewHandlerAPI.GetAll)
 	e.POST("/reviews", reviewHandlerAPI.CreateReview)
 	e.GET("/reviews/:id", reviewHandlerAPI.GetById)
-	e.DELETE("/reviews", reviewHandlerAPI.Delete)
+	e.DELETE("/reviews/:id", reviewHandlerAPI.Delete)
+	e.PUT("/reviews/:id", reviewHandlerAPI.UpdateReview)
 
 }
