@@ -16,7 +16,11 @@ jobs:
       - name: Check permissions
         run: ls -la /opt/hostedtoolcache
       - name: Clear cache
-        run: sudo rm -rf /opt/hostedtoolcache
+        run: sudo rm -rf /opt/hostedtoolcache/
+      - name: Check All
+        run: ls -la /opt/hostedtoolcache
+      - name: Clear Go cache
+        run: sudo rm -rf /opt/hostedtoolcache/go
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
       - name: Set up Docker Buildx
