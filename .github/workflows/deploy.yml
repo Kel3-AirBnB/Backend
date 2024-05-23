@@ -56,5 +56,6 @@ jobs:
               -e S3REGION=${{ secrets.S3REGION }} \
               -e S3ACCESKEY=${{ secrets.S3ACCESKEY }} \
               -e S3SECRETACCESKEY=${{ secrets.S3SECRETACCESKEY }} \
+              -e VALIDATLOCALORSERVER=${{ secrets.VALIDATLOCALORSERVER }} \
               --name airbnb ${{ secrets.DOCKERHUB_USERNAME }}/airbnbv1-images:latest
 
