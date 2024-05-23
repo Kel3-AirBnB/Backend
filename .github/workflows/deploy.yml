@@ -13,6 +13,8 @@ jobs:
         uses: actions/checkout@v4
       - name: Clear Docker cache
         run: docker system prune --all --force --volumes
+      - name: Check permissions
+        run: ls -la /opt/hostedtoolcache
       - name: Clear cache
         run: sudo rm -rf /opt/hostedtoolcache
       - name: Set up QEMU
