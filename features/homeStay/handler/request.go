@@ -1,6 +1,6 @@
 package handler
 
-import "airbnb/features/homestay"
+import homestay "airbnb/features/homeStay"
 
 type HomeStayRequest struct {
 	Name      string `json:"name" form:"name" validate:"required"`

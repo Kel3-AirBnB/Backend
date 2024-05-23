@@ -1,7 +1,7 @@
 package service
 
 import (
-	"airbnb/features/homestay"
+	homestay "airbnb/features/homeStay"
 	"bytes"
 	"errors"
 	"fmt"

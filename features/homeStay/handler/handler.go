@@ -2,7 +2,7 @@ package handler
 
 import (
 	"airbnb/app/middlewares"
-	"airbnb/features/homestay"
+	homestay "airbnb/features/homeStay"
 	"airbnb/utils/responses"
 	"net/http"
 	"strconv"
