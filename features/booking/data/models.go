@@ -2,7 +2,7 @@ package data
 
 import (
 	"airbnb/features/booking"
-	"airbnb/features/homeStay"
+	homestay "airbnb/features/homeStay"
 	"airbnb/features/homeStay/data"
 
 	"gorm.io/gorm"
@@ -46,8 +46,8 @@ func GormToCore(input Booking) booking.Core {
 	return bookingCore
 }
 
-func GormToCoreHomestay(input data.HomeStay) homeStay.HomeStayCore {
-	homestayCore := homeStay.HomeStayCore{
+func GormToCoreHomestay(input data.HomeStay) homestay.Core {
+	homestayCore := homestay.Core{
 		Name:  input.Name,
 		Harga: input.Harga,
 	}

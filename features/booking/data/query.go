@@ -2,7 +2,7 @@ package data
 
 import (
 	"airbnb/features/booking"
-	"airbnb/features/homeStay"
+	homestay "airbnb/features/homeStay"
 	"airbnb/features/homeStay/data"
 	"log"
 
@@ -42,7 +42,7 @@ func (p *bookingQuery) SelectById(id uint, userid uint) (*booking.Core, error) {
 	return &projectcore, nil
 }
 
-func (p *bookingQuery) SelectHomeById(id uint) (*homeStay.HomeStayCore, error) {
+func (p *bookingQuery) SelectHomeById(id uint) (*homestay.Core, error) {
 	var homestayData data.HomeStay
 	tx := p.db.First(&homestayData, id)
 	if tx.Error != nil {
