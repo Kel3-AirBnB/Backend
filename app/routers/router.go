@@ -18,6 +18,10 @@ import (
 	"airbnb/utils/encrypts"
 	"airbnb/utils/helper"
 
+	_homestayData "airbnb/features/homestay/data"
+	_homestayHandler "airbnb/features/homestay/handler"
+	_homestayService "airbnb/features/homestay/service"
+
 	"github.com/aws/aws-sdk-go/service/s3"
 	"github.com/labstack/echo/v4"
 	"gorm.io/gorm"
@@ -26,6 +30,7 @@ import (
 func InitRouter(e *echo.Echo, db *gorm.DB, s3 *s3.S3, cfg *configs.AppConfig, s3Bucket string) {
 	hashService := encrypts.NewHashService()
 	helperService := helper.NewHelperService()
+
 	userData := _userData.New(db, s3)
 	userService := _userService.New(userData, hashService, s3, s3Bucket)
 	userHandlerAPI := _userHandler.New(userService, hashService)
@@ -33,6 +38,10 @@ func InitRouter(e *echo.Echo, db *gorm.DB, s3 *s3.S3, cfg *configs.AppConfig, s3
 	bookingData := _bookingData.New(db)
 	bookingService := _bookingService.New(bookingData, userData)
 	bookingHanlderAPI := _bookingHandler.New(bookingService, helperService)
+
+	homestayData := _homestayData.New(db)
+	homestayService := _homestayService.NewHomestayService(homestayData, s3, s3Bucket)
+	homestayHandlerAPI := _homestayHandler.NewHomestayHandler(homestayService)
 
 	//review
 	reviewData := data.New(db)
@@ -45,6 +54,11 @@ func InitRouter(e *echo.Echo, db *gorm.DB, s3 *s3.S3, cfg *configs.AppConfig, s3
 	e.GET("/users/:id", userHandlerAPI.GetById)
 	e.PUT("/users", userHandlerAPI.UpdateUserById)
 	e.DELETE("/users", userHandlerAPI.Delete)
+
+	e.GET("/homestay", homestayHandlerAPI.GetAll)
+	e.POST("/homestay", homestayHandlerAPI.CreateHomestay)
+	e.GET("/homestay/:id", homestayHandlerAPI.GetById)
+	e.GET("/homestay", homestayHandlerAPI.Delete)
 
 	e.POST("/booking/:id", bookingHanlderAPI.Create)
 	e.GET("/booking/:id", bookingHanlderAPI.GetBookById)
