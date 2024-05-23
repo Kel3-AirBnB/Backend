@@ -5,13 +5,12 @@ RUN mkdir /app
 WORKDIR /app
 
 COPY go.mod ./
-
 COPY go.sum ./
 
 RUN go mod tidy
 
-COPY ./ /app
+COPY . .
 
 RUN go build -o airbnbv1
 
-CMD [ "./airbnbv1" ]
+CMD ["./airbnbv1"]
