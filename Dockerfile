@@ -14,4 +14,4 @@ RUN go mod tidy
 
 RUN go build -o airbnb
 
-CMD [ "./beapi" ]
+CMD [ "./airbnb" ]
