@@ -4,6 +4,7 @@ import (
 	"airbnb/features/booking"
 	"airbnb/features/homestay"
 	"airbnb/features/homestay/data"
+	"fmt"
 	"log"
 
 	"gorm.io/gorm"
@@ -33,6 +34,7 @@ func (p *bookingQuery) Insert(input booking.Core) error {
 func (p *bookingQuery) SelectById(id uint, userid uint) (*booking.Core, error) {
 	var bookingData Booking
 	tx := p.db.Where("user_id = ?", userid).First(&bookingData, id)
+	fmt.Println("[Data Layer] TotalTransaksi: ", bookingData.TotalTransaksi)
 	if tx.Error != nil {
 		return nil, tx.Error
 	}

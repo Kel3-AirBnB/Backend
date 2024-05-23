@@ -17,13 +17,16 @@ type BookingResponse struct {
 	StatusPembayaran string `json:"status_pembayaran,omitempty"`
 }
 
-func PaymentResponse(input booking.Core) BookingResponse {
+func PaymentResponse(input booking.Core, inputHome homestay.Core) BookingResponse {
 	result := BookingResponse{
-		ID:           input.ID,
-		UserID:       input.UserID,
-		PenginapanID: input.PenginapanID,
-		CheckIn:      input.CheckIn,
-		CheckOut:     input.CheckOut,
+		ID:             input.ID,
+		UserID:         input.UserID,
+		PenginapanID:   input.PenginapanID,
+		NamaPenginapan: inputHome.Name,
+		CheckIn:        input.CheckIn,
+		CheckOut:       input.CheckOut,
+		JenisTransaksi: input.JenisTransaksi,
+		TotalTransaksi: input.TotalTransaksi,
 	}
 	return result
 }
@@ -35,13 +38,12 @@ func SelectResponses(input booking.Core) BookingResponse {
 		PenginapanID:     input.PenginapanID,
 		CheckIn:          input.CheckIn,
 		CheckOut:         input.CheckOut,
-		JenisTransaksi:   input.JenisTransaksi,
 		StatusPembayaran: input.StatusPembayaran,
 	}
 	return result
 }
 
-func BookingResponses(input booking.Core, inputHome homestay.Core) BookingResponse {
+func InvoiceResponse(input booking.Core, inputHome homestay.Core) BookingResponse {
 	result := BookingResponse{
 		ID:               input.ID,
 		UserID:           input.UserID,
@@ -49,6 +51,7 @@ func BookingResponses(input booking.Core, inputHome homestay.Core) BookingRespon
 		NamaPenginapan:   inputHome.Name,
 		CheckIn:          input.CheckIn,
 		CheckOut:         input.CheckOut,
+		TotalTransaksi:   input.TotalTransaksi,
 		JenisTransaksi:   input.JenisTransaksi,
 		StatusPembayaran: input.StatusPembayaran,
 	}

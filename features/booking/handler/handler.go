@@ -5,6 +5,7 @@ import (
 	"airbnb/features/booking"
 	"airbnb/utils/helper"
 	"airbnb/utils/responses"
+	"fmt"
 	"log"
 	"net/http"
 	"strconv"
@@ -80,7 +81,8 @@ func (h *BookingHandler) BookById(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, responses.JSONWebResponse("error update data", errInsert))
 	}
 
-	return c.JSON(http.StatusOK, responses.JSONWebResponse("success pay booking", nil))
+	PaymentResponse := PaymentResponse(*bookingData, *homeData)
+	return c.JSON(http.StatusOK, responses.JSONWebResponse("success pay booking", PaymentResponse))
 }
 
 func (h *BookingHandler) GetBookById(c echo.Context) error {
@@ -99,5 +101,32 @@ func (h *BookingHandler) GetBookById(c echo.Context) error {
 	}
 
 	projectResponse := SelectResponses(*bookingData)
+	return c.JSON(http.StatusOK, responses.JSONWebResponse("success get detail project", projectResponse))
+}
+
+func (h *BookingHandler) GetInvoiceById(c echo.Context) error {
+	id := c.Param("id")
+	idConv, errConv := strconv.Atoi(id)
+	if errConv != nil {
+		return c.JSON(http.StatusBadRequest, responses.JSONWebResponse("error get project id", idConv))
+	}
+
+	idToken := middlewares.ExtractTokenUserId(c) // extract id user from jwt token
+	log.Println("idtoken:", idToken)
+
+	bookingData, err := h.bookingService.GetBookingById(uint(idConv), uint(idToken))
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, responses.JSONWebResponse("error get project data", nil))
+	}
+
+	homeData, errhomeData := h.bookingService.GetHomeById(bookingData.PenginapanID)
+	if errhomeData != nil {
+		return c.JSON(http.StatusInternalServerError, responses.JSONWebResponse("error get homeData data", nil))
+	}
+
+	harga := bookingData.TotalTransaksi
+	fmt.Println("[Handler Layer] harga: ", harga)
+	projectResponse := InvoiceResponse(*bookingData, *homeData)
+	fmt.Println("[Handler Layer] Total Transaksi: ", projectResponse.TotalTransaksi)
 	return c.JSON(http.StatusOK, responses.JSONWebResponse("success get detail project", projectResponse))
 }
