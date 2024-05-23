@@ -44,7 +44,7 @@ func (u *userService) Create(input user.Core) (string, error) {
 		}
 		input.Password = result
 	}
-	defaultPhoto := "https://air-bnb.s3.ap-southeast-2.amazonaws.com/default-pp.jpg"
+	defaultPhoto := "https://air-bnb.s3.ap-southeast-2.amazonaws.com/fotoprofile/default-pp.jpg"
 	input.Foto = defaultPhoto
 	err := u.userData.Insert(input)
 	if err != nil {
@@ -61,7 +61,7 @@ func (u *userService) UploadFileToS3(file io.Reader, fileName string) (string, e
 
 	_, err := u.s3.PutObject(&s3.PutObjectInput{
 		Bucket: aws.String(u.s3Bucket),
-		Key:    aws.String(fileName),
+		Key:    aws.String("fotoprofile/" + fileName),
 		Body:   bytes.NewReader(buf.Bytes()),
 		ACL:    aws.String("public-read"),
 	})
