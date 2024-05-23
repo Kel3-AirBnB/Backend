@@ -3,8 +3,6 @@ package configs
 import (
 	"os"
 	"strconv"
-
-	"github.com/joho/godotenv"
 )
 
 var (
@@ -34,11 +32,6 @@ type AppConfig struct {
 func ReadEnv() *AppConfig {
 	var app = AppConfig{}
 
-	err := godotenv.Load() // Menambahkan pembacaan ENV file local
-	if err != nil {
-
-		panic("Error loading .env file")
-	}
 	app.VALIDATLOCALORSERVER = os.Getenv("VALIDATLOCALORSERVER")
 
 	app.DB_USERNAME = os.Getenv("DBUSER")
