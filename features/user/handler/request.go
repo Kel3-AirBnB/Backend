@@ -12,7 +12,7 @@ type UserRequest struct {
 	Email              string `gorm:"unique" json:"email" form:"email"`
 	Password           string `json:"password" form:"password"`
 	KetikUlangPassword string `json:"repeat_password" form:"repeat_password"`
-	TanggalLahir       string `json:"tanggal lahir" form:"tanggal lahir"`
+	TanggalLahir       string `json:"tanggal_lahir" form:"tanggal_lahir"`
 	Foto               string `json:"foto" form:"foto"`
 }
 
