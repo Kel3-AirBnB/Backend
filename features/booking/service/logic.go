@@ -2,7 +2,7 @@ package service
 
 import (
 	"airbnb/features/booking"
-	"airbnb/features/homeStay"
+	homestay "airbnb/features/homeStay"
 	"airbnb/features/user"
 	"errors"
 	"log"
@@ -35,7 +35,7 @@ func (s *bookingService) Create(input booking.Core) error {
 	return nil
 }
 
-func (p *bookingService) GetHomeById(id uint) (data *homeStay.HomeStayCore, err error) {
+func (p *bookingService) GetHomeById(id uint) (data *homestay.Core, err error) {
 
 	if id <= 0 {
 		return nil, errors.New("[validation] id not valid")

@@ -2,7 +2,7 @@ package handler
 
 import (
 	"airbnb/features/booking"
-	"airbnb/features/homeStay"
+	homestay "airbnb/features/homeStay"
 )
 
 type BookingResponse struct {
@@ -41,7 +41,7 @@ func SelectResponses(input booking.Core) BookingResponse {
 	return result
 }
 
-func BookingResponses(input booking.Core, inputHome homeStay.HomeStayCore) BookingResponse {
+func BookingResponses(input booking.Core, inputHome homestay.Core) BookingResponse {
 	result := BookingResponse{
 		ID:               input.ID,
 		UserID:           input.UserID,
