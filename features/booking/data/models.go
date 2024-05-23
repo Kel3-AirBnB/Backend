@@ -17,7 +17,7 @@ type Booking struct {
 	TotalTransaksi   string        `json:"total_transaksi" form:"total_transaksi"`
 	JenisTransaksi   string        `json:"jenis_transaksi" form:"jenis_transaksi"`
 	StatusPembayaran string        `json:"status_pembayaran" form:"status_pembayaran"`
-	HomeStay         data.HomeStay `gorm:"foreignKey:PenginapanID"`
+	HomeStay         data.Homestay `gorm:"foreignKey:PenginapanID"`
 }
 
 func CoreToGorm(input booking.Core) Booking {
@@ -46,7 +46,7 @@ func GormToCore(input Booking) booking.Core {
 	return bookingCore
 }
 
-func GormToCoreHomestay(input data.HomeStay) homestay.Core {
+func GormToCoreHomestay(input data.Homestay) homestay.Core {
 	homestayCore := homestay.Core{
 		Name:  input.Name,
 		Harga: input.Harga,

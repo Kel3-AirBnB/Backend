@@ -13,5 +13,5 @@ func InitMigrations(db *gorm.DB) {
 	db.AutoMigrate(&_dataUser.User{})
 	db.AutoMigrate(&_dataBooking.Booking{})
 	db.AutoMigrate(&_dataReview.Review{})
-	db.AutoMigrate(&_dataHomestay.HomeStay{})
+	db.AutoMigrate(&_dataHomestay.Homestay{})
 }

@@ -43,7 +43,7 @@ func (p *bookingQuery) SelectById(id uint, userid uint) (*booking.Core, error) {
 }
 
 func (p *bookingQuery) SelectHomeById(id uint) (*homestay.Core, error) {
-	var homestayData data.HomeStay
+	var homestayData data.Homestay
 	tx := p.db.First(&homestayData, id)
 	if tx.Error != nil {
 		return nil, tx.Error

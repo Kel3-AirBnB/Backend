@@ -27,7 +27,7 @@ type DataInterface interface {
 }
 
 type ServiceInterface interface {
-	Create(input Core, file io.Reader, handlerFilename string) (string, error)
+	Create(input Core) (string, error)
 	UploadFileToS3(file io.Reader, fileName string) (string, error)
 	Login(email string, password string) (data *Core, token string, err error)
 	GetProfile(id uint) (data *Core, err error)
