@@ -54,7 +54,7 @@ func (p *bookingQuery) SelectHomeById(id uint) (*homestay.Core, error) {
 	return &homestaycore, nil
 }
 
-func (p *bookingQuery) Payment(id uint, input booking.Core) error {
+// func (p *bookingQuery) Payment(id uint, input booking.Core) error {
 
-	return nil
-}
+// 	return nil
+// }
