@@ -12,6 +12,6 @@ COPY . .
 # Debug: tampilkan isi direktori sebelum build
 RUN ls -R /app
 
-RUN go build -o airbnbv1
+RUN go build -o airbnbv1 .
 
 CMD ["./airbnbv1"]
