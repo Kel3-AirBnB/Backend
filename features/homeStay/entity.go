@@ -1,6 +1,6 @@
 package homeStay
 
-type homeStayCore struct {
+type HomeStayCore struct {
 	ID        uint
 	Name      string
 	Rating    string

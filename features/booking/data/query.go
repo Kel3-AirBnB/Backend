@@ -2,6 +2,8 @@ package data
 
 import (
 	"airbnb/features/booking"
+	"airbnb/features/homeStay"
+	"airbnb/features/homeStay/data"
 	"log"
 
 	"gorm.io/gorm"
@@ -26,4 +28,28 @@ func (p *bookingQuery) Insert(input booking.Core) error {
 	}
 
 	return nil
+}
+
+func (p *bookingQuery) SelectById(id uint, userid uint) (*booking.Core, error) {
+	var bookingData Booking
+	tx := p.db.Where("user_id = ?", userid).First(&bookingData, id)
+	if tx.Error != nil {
+		return nil, tx.Error
+	}
+
+	projectcore := GormToCore(bookingData)
+	log.Print(projectcore)
+	return &projectcore, nil
+}
+
+func (p *bookingQuery) SelectHomeById(id uint) (*homeStay.HomeStayCore, error) {
+	var homestayData data.HomeStay
+	tx := p.db.First(&homestayData, id)
+	if tx.Error != nil {
+		return nil, tx.Error
+	}
+
+	homestaycore := GormToCoreHomestay(homestayData)
+	log.Print(homestaycore)
+	return &homestaycore, nil
 }
