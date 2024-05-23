@@ -39,7 +39,6 @@ func (h *BookingHandler) Create(c echo.Context) error {
 	}
 	newBooking.UserID = uint(idToken)
 	newBooking.PenginapanID = uint(idConv)
-	// newBooking.TotalTransaksi =
 	newBooking.StatusPembayaran = "Belum Dibayar"
 	errInsert := h.bookingService.Create(GormToCore(newBooking))
 	if errInsert != nil {
@@ -49,6 +48,12 @@ func (h *BookingHandler) Create(c echo.Context) error {
 }
 
 func (h *BookingHandler) BookById(c echo.Context) error {
+	updatePayment := PaymentRequest{}
+	errBind := c.Bind(&updatePayment)
+	if errBind != nil {
+		return c.JSON(http.StatusBadRequest, responses.JSONWebResponse("error bind"+errBind.Error(), nil))
+	}
+
 	id := c.Param("id")
 	idConv, errConv := strconv.Atoi(id)
 	if errConv != nil {
@@ -68,8 +73,14 @@ func (h *BookingHandler) BookById(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, responses.JSONWebResponse("error get homeData data", nil))
 	}
 
-	projectResponse := BookingResponses(*bookingData, *homeData)
-	return c.JSON(http.StatusOK, responses.JSONWebResponse("success get detail project", projectResponse))
+	inputCore := RequestToCore(updatePayment)
+
+	_, errInsert := h.bookingService.Payment(idConv, idToken, inputCore, bookingData.CheckIn, bookingData.CheckOut, homeData.Harga)
+	if errInsert != nil {
+		return c.JSON(http.StatusInternalServerError, responses.JSONWebResponse("error update data", errInsert))
+	}
+
+	return c.JSON(http.StatusOK, responses.JSONWebResponse("success pay booking", nil))
 }
 
 func (h *BookingHandler) GetBookById(c echo.Context) error {

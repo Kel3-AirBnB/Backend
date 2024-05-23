@@ -54,7 +54,11 @@ func (p *bookingQuery) SelectHomeById(id uint) (*homestay.Core, error) {
 	return &homestaycore, nil
 }
 
-// func (p *bookingQuery) Payment(id uint, input booking.Core) error {
-
-// 	return nil
-// }
+func (p *bookingQuery) Payment(id int, input booking.Core) error {
+	inputGorm := CoreToGorm(input)
+	tx := p.db.Model(&Booking{}).Where("id = ?", id).Updates(&inputGorm)
+	if tx.Error != nil {
+		return tx.Error
+	}
+	return nil
+}

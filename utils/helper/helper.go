@@ -6,7 +6,7 @@ import (
 )
 
 type HelperInterface interface {
-	GetTotalDay(checkin string, checkout string) (uint, error)
+	GetTotalDay(checkin string, checkout string) (int, error)
 	//GetTotalDay(inpit int) (int, error)
 }
 
@@ -16,15 +16,21 @@ func NewHelperService() HelperInterface {
 	return &helper{}
 }
 
-func (h *helper) GetTotalDay(checkin string, checkout string) (uint, error) {
+func (h *helper) GetTotalDay(checkin string, checkout string) (int, error) {
 	if len(checkin) < 2 {
 		return 0, fmt.Errorf("input string too short")
 	}
 	if len(checkout) < 2 {
 		return 0, fmt.Errorf("input string too short")
 	}
-	uintCheckin, _ := strconv.Atoi(checkin[:2])
-	uintCheckout, _ := strconv.Atoi(checkout[:2])
-	// TotalDay :=
-	return uint(uintCheckout) - uint(uintCheckin), nil
+	fmt.Println("[Helper Layer]")
+	fmt.Println("[Helper Layer] CheckIn: ", checkin)
+	fmt.Println("[Helper Layer] CheckOut: ", checkout)
+	intCheckin, _ := strconv.Atoi(checkin[8:])
+	intCheckout, _ := strconv.Atoi(checkout[8:])
+	fmt.Println("[Helper Layer] intCheckin: ", intCheckin)
+	fmt.Println("[Helper Layer] intCheckout: ", intCheckout)
+	TotalDay := intCheckout - intCheckin
+	fmt.Println("[Helper Layer] TotalDay: ", TotalDay)
+	return TotalDay, nil
 }

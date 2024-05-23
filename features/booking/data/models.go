@@ -26,6 +26,7 @@ func CoreToGorm(input booking.Core) Booking {
 		PenginapanID:     input.PenginapanID,
 		CheckIn:          input.CheckIn,
 		CheckOut:         input.CheckOut,
+		TotalTransaksi:   input.TotalTransaksi,
 		JenisTransaksi:   input.JenisTransaksi,
 		StatusPembayaran: input.StatusPembayaran,
 	}

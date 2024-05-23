@@ -6,7 +6,9 @@ import (
 	"airbnb/features/user"
 	"airbnb/utils/helper"
 	"errors"
+	"fmt"
 	"log"
+	"strconv"
 )
 
 type bookingService struct {
@@ -58,16 +60,26 @@ func (p *bookingService) GetBookingById(id uint, userid uint) (data *booking.Cor
 	return p.bookingData.SelectById(id, userid)
 }
 
-// func (p *bookingService) Payment(id uint, userid uint, input booking.Core) error {
-// 	if id <= 0 {
-// 		return errors.New("id not valid")
-// 	}
+func (p *bookingService) Payment(id int, userid int, input booking.Core, checkin string, checkout string, price string) (string, error) {
+	if id <= 0 {
+		return "", errors.New("id not valid")
+	}
 
-// 	// totalHari, nil := p.helper.GetTotalDay(input.CheckIn, input.CheckOut)
-// 	// input.TotalTransaksi = totalHari *
-// 	// err := p.bookingData.Payment(id, input)
-// 	// if err != nil {
-// 	// 	return err
-// 	// }
-// 	return nil
-// }
+	totalHari, nil := p.helper.GetTotalDay(checkin, checkout)
+
+	idConv, errConv := strconv.Atoi(price)
+	if errConv != nil {
+		fmt.Println("Error:", errConv)
+		return "", errConv
+	}
+	totalTransaksi := totalHari * idConv
+
+	input.TotalTransaksi = strconv.Itoa(totalTransaksi)
+
+	input.StatusPembayaran = "Sudah Dibayar"
+	errResult := p.bookingData.Payment(id, input)
+	if errResult != nil {
+		return "Error", errResult
+	}
+	return "", nil
+}
