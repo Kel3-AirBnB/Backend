@@ -3,8 +3,10 @@ package handler
 import (
 	"airbnb/app/middlewares"
 	"airbnb/features/booking"
+	"airbnb/features/user"
 	"airbnb/utils/helper"
 	"airbnb/utils/responses"
+	"fmt"
 	"log"
 	"net/http"
 	"strconv"
@@ -15,12 +17,14 @@ import (
 type BookingHandler struct {
 	bookingService booking.ServiceInterface
 	helperService  helper.HelperInterface
+	userService    user.ServiceInterface
 }
 
-func New(bs booking.ServiceInterface, hs helper.HelperInterface) *BookingHandler {
+func New(bs booking.ServiceInterface, hs helper.HelperInterface, us user.ServiceInterface) *BookingHandler {
 	return &BookingHandler{
 		bookingService: bs,
 		helperService:  hs,
+		userService:    us,
 	}
 }
 
@@ -152,4 +156,41 @@ func (h *BookingHandler) GetAllHistoryUser(c echo.Context) error {
 		allHistory = append(allHistory, InvoiceResponse(value, *homeData))
 	}
 	return c.JSON(http.StatusOK, responses.JSONWebResponse("success read data", allHistory))
+}
+
+func (h *BookingHandler) GetHistoryHost(c echo.Context) error {
+	fmt.Println("[Handler] GetHistoryHost")
+	id := c.Param("id")
+	idConv, errConv := strconv.Atoi(id)
+	if errConv != nil {
+		return c.JSON(http.StatusBadRequest, responses.JSONWebResponse("error get project id", idConv))
+	}
+	fmt.Println("[Handler] ID House", idConv)
+
+	idToken := middlewares.ExtractTokenUserId(c) // extract id user from jwt token
+	log.Println("idtoken:", idToken)
+
+	result, err := h.bookingService.GetBookingByHomestay(uint(idConv), uint(idToken)) //rumah - token
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, responses.JSONWebResponse("error read data", nil))
+	}
+
+	var allHistoryHomeById []HistoryHomeStayResponse
+	for _, v := range result {
+		fmt.Println("[Handler] Range Result", len(result))
+		fmt.Println("[Handler] allHistoryHomeById", v.PenginapanID)
+		fmt.Println("[Handler] userID", v.UserID)
+		homeData, errhomeData := h.bookingService.GetHomeById(v.PenginapanID)
+		fmt.Println("[Handler] homeData", homeData)
+		if errhomeData != nil {
+			return c.JSON(http.StatusInternalServerError, responses.JSONWebResponse("error get homeData data", nil))
+		}
+		userData, errUserData := h.userService.GetProfile(v.UserID)
+
+		if errUserData != nil {
+			return c.JSON(http.StatusInternalServerError, responses.JSONWebResponse("error get user data", nil))
+		}
+		allHistoryHomeById = append(allHistoryHomeById, HistoryHomeStayResponses(v, *homeData, *userData))
+	}
+	return c.JSON(http.StatusOK, responses.JSONWebResponse("success read data", allHistoryHomeById))
 }

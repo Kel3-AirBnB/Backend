@@ -54,3 +54,13 @@ func GormToCoreHomestay(input data.Homestay) homestay.Core {
 	}
 	return homestayCore
 }
+
+func GormToCoreHomestayHistory(input data.Homestay) homestay.Core {
+	homestayCore := homestay.Core{
+		ID:     input.ID,
+		UserID: input.UserID,
+		Name:   input.Name,
+		Harga:  input.Harga,
+	}
+	return homestayCore
+}

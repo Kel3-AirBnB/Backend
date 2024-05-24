@@ -3,11 +3,25 @@ package handler
 import (
 	"airbnb/features/booking"
 	"airbnb/features/homestay"
+	"airbnb/features/user"
 )
 
 type BookingResponse struct {
 	ID               uint   `json:"id,omitempty"`
 	UserID           uint   `json:"user_id,omitempty"`
+	PenginapanID     uint   `json:"penginapan_id,omitempty"`
+	NamaPenginapan   string `json:"nama_penginapan,omitempty"`
+	CheckIn          string `json:"checkin,omitempty"`
+	CheckOut         string `json:"checkout,omitempty"`
+	TotalTransaksi   string `json:"total_transaksi,omitempty"`
+	JenisTransaksi   string `json:"jenis_transaksi,omitempty"`
+	StatusPembayaran string `json:"status_pembayaran,omitempty"`
+}
+
+type HistoryHomeStayResponse struct {
+	ID               uint   `json:"id,omitempty"`
+	UserID           uint   `json:"user_id,omitempty"`
+	Nama             string `json:"nama,omitempty"`
 	PenginapanID     uint   `json:"penginapan_id,omitempty"`
 	NamaPenginapan   string `json:"nama_penginapan,omitempty"`
 	CheckIn          string `json:"checkin,omitempty"`
@@ -48,6 +62,22 @@ func InvoiceResponse(input booking.Core, inputHome homestay.Core) BookingRespons
 	result := BookingResponse{
 		ID:               input.ID,
 		UserID:           input.UserID,
+		PenginapanID:     input.PenginapanID,
+		NamaPenginapan:   inputHome.Name,
+		CheckIn:          input.CheckIn,
+		CheckOut:         input.CheckOut,
+		TotalTransaksi:   input.TotalTransaksi,
+		JenisTransaksi:   input.JenisTransaksi,
+		StatusPembayaran: input.StatusPembayaran,
+	}
+	return result
+}
+
+func HistoryHomeStayResponses(input booking.Core, inputHome homestay.Core, inputUser user.Core) HistoryHomeStayResponse {
+	result := HistoryHomeStayResponse{
+		ID:               input.ID,
+		UserID:           input.UserID,
+		Nama:             inputUser.Nama,
 		PenginapanID:     input.PenginapanID,
 		NamaPenginapan:   inputHome.Name,
 		CheckIn:          input.CheckIn,
