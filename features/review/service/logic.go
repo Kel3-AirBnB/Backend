@@ -2,10 +2,12 @@ package service
 
 import (
 	"airbnb/features/review"
+	"airbnb/features/user"
 	"bytes"
 	"errors"
 	"fmt"
 	"io"
+	"log"
 	"os"
 	"time"
 
@@ -15,9 +17,38 @@ import (
 
 type reviewService struct {
 	reviewData   review.DataInterface
+	userData     user.DataInterface
 	s3           *s3.S3
 	s3BucketName string
 	env          string
+}
+
+func New(rd review.DataInterface, s3 *s3.S3, ud user.DataInterface, bucketName, env string) review.ServiceInterface {
+	return &reviewService{
+		reviewData:   rd,
+		s3:           s3,
+		userData:     ud,
+		s3BucketName: bucketName,
+		env:          env,
+	}
+}
+
+// GetReviewByPenginapanID implements review.ServiceInterface.
+func (r *reviewService) GetReviewByPenginapanID(penginapanID uint) ([]review.Core, error) {
+	return r.reviewData.SelectByPenginapanID(penginapanID)
+}
+
+// GetReviewsByUserID implements review.ServiceInterface.
+func (r *reviewService) GetReviewsByUserID(userID uint) (*review.Core, error) {
+	fmt.Println("ini udah masuk ke service")
+	fmt.Println("service. userid", userID)
+	_, errID := r.userData.SelectById(userID)
+
+	if errID != nil {
+		log.Print("Err Select By ID Service Layer", errID)
+		return nil, errID
+	}
+	return r.reviewData.SelectById(userID)
 }
 
 // UpdateById implements review.ServiceInterface.
@@ -59,15 +90,6 @@ func (r *reviewService) UpdateById(id uint, input review.Core, file io.Reader, h
 
 	// Jika tidak ada file yang diunggah, kembalikan URL foto yang sudah ada
 	return input.Foto, nil
-}
-
-func New(rd review.DataInterface, s3 *s3.S3, bucketName, env string) review.ServiceInterface {
-	return &reviewService{
-		reviewData:   rd,
-		s3:           s3,
-		s3BucketName: bucketName,
-		env:          env,
-	}
 }
 
 // Delete implements review.ServiceInterface.

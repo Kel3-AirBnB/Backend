@@ -2,6 +2,7 @@ package data
 
 import (
 	"airbnb/features/review"
+
 	"time"
 
 	"gorm.io/gorm"
@@ -10,6 +11,44 @@ import (
 type reviewQuery struct {
 	db *gorm.DB
 }
+
+// SelectByUserID implements review.DataInterface.
+func (r *reviewQuery) SelectByUserID(userID uint) (*review.Core, error) {
+	var reviewData Review
+	if tx := r.db.Where("user_id = ?", userID).First(&reviewData); tx.Error != nil {
+		return nil, tx.Error
+	}
+
+	reviewCore := ReviewGormToReviewCore(reviewData)
+	return &reviewCore, nil
+}
+
+// SelectByPenginapanID implements review.DataInterface.
+func (r *reviewQuery) SelectByPenginapanID(penginapanID uint) ([]review.Core, error) {
+	var reviews []Review
+	if err := r.db.Where("penginapan_id = ?", penginapanID).Find(&reviews).Error; err != nil {
+		return nil, err
+	}
+	var reviewCores []review.Core
+	for _, reviewData := range reviews {
+		reviewCores = append(reviewCores, ReviewGormToReviewCore(reviewData))
+	}
+	return reviewCores, nil
+}
+
+// SelectByUserID implements review.DataInterface.
+// func (r *reviewQuery) SelectByUserID(userID uint) (review.Core, error) {
+// 	var reviewData Review
+// 	if err := r.db.First(&reviewData, userID).Error; err != nil {
+// 		return review.Core{}, err
+// 	}
+// 	// if err := r.db.Where("userid = ?", userID).First(&reviewData).Error; err != nil {
+// 	// 	return review.Core{}, err
+// 	// }
+
+// 	reviewCore := ReviewGormToReviewCore(reviewData)
+// 	return reviewCore, nil
+// }
 
 // EditById implements review.DataInterface.
 func (r *reviewQuery) EditById(id uint, input review.Core) error {
