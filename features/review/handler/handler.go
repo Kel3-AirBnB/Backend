@@ -1,8 +1,10 @@
 package handler
 
 import (
+	"airbnb/app/middlewares"
 	"airbnb/features/review"
 	"airbnb/utils/responses"
+	"log"
 	"net/http"
 	"strconv"
 	"strings"
@@ -78,7 +80,7 @@ func (rh *ReviewHandler) GetById(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, responses.JSONWebResponse("error get reviews id", idConv))
 	}
 
-	reviewData, err := rh.reviewService.GetReviews(uint(idConv)) // Ambil data pengguna dari Redis
+	reviewData, err := rh.reviewService.GetReviews(uint(idConv))
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, responses.JSONWebResponse("error get reviews data", nil))
 	}
@@ -101,43 +103,6 @@ func (rh *ReviewHandler) Delete(c echo.Context) error {
 	return c.JSON(http.StatusOK, responses.JSONWebResponse("success delete data", err))
 }
 
-// func (rh *ReviewHandler) UpdateReview(c echo.Context) error {
-// 	id := c.Param("id")
-// 	idConv, errConv := strconv.Atoi(id)
-// 	if errConv != nil {
-// 		return c.JSON(http.StatusBadRequest, map[string]any{
-// 			"status":  "failed",
-// 			"message": "error converting ID: " + errConv.Error(),
-// 		})
-// 	}
-// 	newReview := ReviewRequest{}
-// 	errBind := c.Bind(&newReview)
-// 	if errBind != nil {
-// 		return c.JSON(http.StatusBadRequest, responses.JSONWebResponse("error bind"+errBind.Error(), nil))
-// 	}
-
-// 	file, handler, err := c.Request().FormFile("review_profile")
-// 	if err != nil {
-// 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
-// 			"message": "Unable to upload photo: " + err.Error(),
-// 		})
-// 	}
-// 	defer file.Close()
-
-// 	inputCore := RequestToCore(newReview)
-
-// 	// _, errInsert := rh.reviewService.Create(inputCore, file, handler.Filename)
-// 	// _, errUpdate := rh.reviewService.UpdateById(uint(idToken),inputCore, file, handler.Filename)
-// 	_, errUpdate := rh.reviewService.UpdateById(uint(idConv), inputCore, file, handler.Filename)
-// 	if errUpdate != nil {
-// 		if strings.Contains(errUpdate.Error(), "validation") {
-// 			return c.JSON(http.StatusBadRequest, responses.JSONWebResponse("error update data", errUpdate))
-// 		}
-// 		return c.JSON(http.StatusInternalServerError, responses.JSONWebResponse("error update data", errUpdate))
-// 	}
-
-//		return c.JSON(http.StatusCreated, responses.JSONWebResponse("success update data", nil))
-//	}
 func (rh *ReviewHandler) UpdateReview(c echo.Context) error {
 	// Ambil ID ulasan dari URL
 	id := c.Param("id")
@@ -174,4 +139,30 @@ func (rh *ReviewHandler) UpdateReview(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusCreated, responses.JSONWebResponse("success update data", nil))
+}
+
+func (rh *ReviewHandler) GetReviewsByUserID(c echo.Context) error {
+	idToken := middlewares.ExtractTokenUserId(c) // extract id user from jwt token
+	log.Println("idtoken:", idToken)
+	reviewData, err := rh.reviewService.GetReviewsByUserID(uint(idToken))
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, responses.JSONWebResponse("error get review data", nil))
+	}
+	ReviewResponse := CoreToGorm(*reviewData)
+	return c.JSON(http.StatusOK, responses.JSONWebResponse("success get review by user_id", ReviewResponse))
+}
+
+func (rh *ReviewHandler) GetReviewByPenginapanID(c echo.Context) error {
+	penginapanIDParam := c.Param("penginapanID")
+	penginapanID, err := strconv.Atoi(penginapanIDParam)
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, responses.JSONWebResponse("invalid penginapanID", err))
+	}
+
+	reviewData, err := rh.reviewService.GetReviewByPenginapanID(uint(penginapanID))
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, responses.JSONWebResponse("error get reviews by penginapanID", nil))
+	}
+
+	return c.JSON(http.StatusOK, responses.JSONWebResponse("success get reviews by penginapan_id", reviewData))
 }

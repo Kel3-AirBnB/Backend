@@ -11,6 +11,14 @@ var (
 )
 
 type AppConfig struct {
+
+	// err := godotenv.Load() // Menambahkan pembacaan ENV file local
+	// if err != nil {
+
+	// 	panic("Error loading .env file")
+	// }
+	// app.VALIDATLOCALORSERVER = os.Getenv("VALIDATLOCALORSERVER")
+
 	DB_USERNAME string
 	DB_PASSWORD string
 	DB_HOSTNAME string
