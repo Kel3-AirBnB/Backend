@@ -37,7 +37,7 @@ func InitRouter(e *echo.Echo, db *gorm.DB, s3 *s3.S3, cfg *configs.AppConfig, s3
 
 	bookingData := _bookingData.New(db)
 	bookingService := _bookingService.New(bookingData, userData, helperService)
-	bookingHanlderAPI := _bookingHandler.New(bookingService, helperService)
+	bookingHanlderAPI := _bookingHandler.New(bookingService, helperService, userService)
 
 	homestayData := _homestayData.New(db)
 	homestayService := _homestayService.NewHomestayService(homestayData, s3, s3Bucket)
@@ -48,23 +48,24 @@ func InitRouter(e *echo.Echo, db *gorm.DB, s3 *s3.S3, cfg *configs.AppConfig, s3
 	reviewService := service.New(reviewData, s3, userData, s3Bucket, cfg.VALIDATLOCALORSERVER)
 	reviewHandlerAPI := handler.New(reviewService)
 
-	e.POST("/users", userHandlerAPI.Register)
-	e.POST("/login", userHandlerAPI.Login)
-	e.GET("/profile", userHandlerAPI.Profile, middlewares.JWTMiddleware())
-	e.GET("/users/:id", userHandlerAPI.GetById)
-	e.PUT("/users", userHandlerAPI.UpdateUserById)
-	e.DELETE("/users", userHandlerAPI.Delete)
+	e.POST("/users", userHandlerAPI.Register)                                   //register
+	e.POST("/login", userHandlerAPI.Login)                                      //login
+	e.GET("/profile", userHandlerAPI.Profile, middlewares.JWTMiddleware())      //get profile + jwt
+	e.GET("/users/:id", userHandlerAPI.GetById)                                 //get user by id
+	e.PUT("/users", userHandlerAPI.UpdateUserById, middlewares.JWTMiddleware()) //edit profile
+	e.DELETE("/users", userHandlerAPI.Delete, middlewares.JWTMiddleware())      // delete user
 
 	e.GET("/homestay", homestayHandlerAPI.GetAll)
 	e.POST("/homestay", homestayHandlerAPI.CreateHomestay)
 	e.GET("/homestay/:id", homestayHandlerAPI.GetById)
 	e.GET("/homestay", homestayHandlerAPI.Delete)
 
-	e.POST("/booking/:id", bookingHanlderAPI.Create)           //membuat pesanan
-	e.GET("/booking/:id", bookingHanlderAPI.GetBookById)       //cek status pesanan dengan id pesanan dan user / jwt
-	e.POST("/payment/:id", bookingHanlderAPI.BookById)         //melakukan pembayaran
-	e.GET("/payment/:id", bookingHanlderAPI.GetInvoiceById)    //Mendapatkan invoices
-	e.GET("/historyuser", bookingHanlderAPI.GetAllHistoryUser) //Mendapatkan hitory user
+	e.POST("/booking/:id", bookingHanlderAPI.Create, middlewares.JWTMiddleware())             //membuat pesanan + jwt
+	e.GET("/booking/:id", bookingHanlderAPI.GetBookById, middlewares.JWTMiddleware())         //cek status pesanan dengan id pesanan + jwt
+	e.POST("/payment/:id", bookingHanlderAPI.BookById, middlewares.JWTMiddleware())           //melakukan pembayaran dengan id pesanan + jwt
+	e.GET("/payment/:id", bookingHanlderAPI.GetInvoiceById, middlewares.JWTMiddleware())      //Print invoices atau cek history dengan id pesanan + jwt
+	e.GET("/historyuser", bookingHanlderAPI.GetAllHistoryUser, middlewares.JWTMiddleware())   //Mendapatkan semua hitory user + jwt
+	e.GET("/historyhouse/:id", bookingHanlderAPI.GetHistoryHost, middlewares.JWTMiddleware()) //Mendapatkan history house by id + jwt current host
 
 	//review
 	e.GET("/reviews", reviewHandlerAPI.GetAll)

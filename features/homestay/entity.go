@@ -7,6 +7,7 @@ import (
 
 type Core struct {
 	ID        uint
+	UserID    uint
 	Name      string
 	Rating    string
 	Foto      string

@@ -64,7 +64,6 @@ func (p *bookingService) GetBookingById(id uint, userid uint) (data *booking.Cor
 	if errID != nil {
 		return nil, errID
 	}
-
 	if id <= 0 {
 		return nil, errors.New("[validation] home id not valid")
 	}
@@ -101,4 +100,22 @@ func (p *bookingService) GetAll(userid uint) ([]booking.Core, error) {
 		return nil, errors.New("[validation] id not valid")
 	}
 	return p.bookingData.SelectAll(userid)
+}
+
+func (p *bookingService) GetBookingByHomestay(id uint, userid uint) ([]booking.Core, error) {
+	fmt.Println("[Service Layer] Masuk Ke GetBookingByHomestay")
+
+	if id <= 0 {
+		return nil, errors.New("[validation] id not valid")
+	}
+
+	fmt.Println("[Service Layer] id rumah", id)
+	fmt.Println("[Service Layer	] userid", userid)
+	dataCurrentHome, errcheckValidated := p.bookingData.ValidatedHomeById(id, userid)
+	if errcheckValidated != nil {
+		return nil, errors.New("[validation] id and current user not valid")
+	}
+
+	fmt.Println("[Service] dataCurrentHome", dataCurrentHome.ID)
+	return p.bookingData.SelectBookingByHomestayId(dataCurrentHome.ID, dataCurrentHome.UserID)
 }
