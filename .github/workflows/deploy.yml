@@ -47,7 +47,6 @@ jobs:
             docker images -q --filter "dangling=true" | xargs -r docker rmi || true
             docker pull ${{ secrets.DOCKERHUB_USERNAME }}/airbnbv1-images:latest
             docker run -d -p 80:8080 \
-              #-e VALIDATLOCALORSERVER=${{ secrets.VALIDATLOCALORSERVER }} \
               -e DBUSER=${{ secrets.DBUSER }} \
               -e DBPASS=${{ secrets.DBPASS }} \
               -e DBHOST=${{ secrets.DBHOST }} \
