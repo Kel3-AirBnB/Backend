@@ -33,22 +33,22 @@ func New(rd review.DataInterface, s3 *s3.S3, ud user.DataInterface, bucketName, 
 	}
 }
 
-// GetReviewByPenginapanID implements review.ServiceInterface.
-func (r *reviewService) GetReviewByPenginapanID(penginapanID uint) ([]review.Core, error) {
-	return r.reviewData.SelectByPenginapanID(penginapanID)
-}
-
 // GetReviewsByUserID implements review.ServiceInterface.
-func (r *reviewService) GetReviewsByUserID(userID uint) (*review.Core, error) {
+func (r *reviewService) GetReviewsByUserID(id uint) (data []review.Core, rerr error) {
 	fmt.Println("ini udah masuk ke service")
-	fmt.Println("service. userid", userID)
-	_, errID := r.userData.SelectById(userID)
+	fmt.Println("service. userid", id)
+	_, errID := r.userData.SelectById(id)
 
 	if errID != nil {
 		log.Print("Err Select By ID Service Layer", errID)
 		return nil, errID
 	}
-	return r.reviewData.SelectById(userID)
+	return r.reviewData.SelectByUserID(id)
+}
+
+// GetReviewByPenginapanID implements review.ServiceInterface.
+func (r *reviewService) GetReviewByPenginapanID(penginapanID uint) ([]review.Core, error) {
+	return r.reviewData.SelectByPenginapanID(penginapanID)
 }
 
 // UpdateById implements review.ServiceInterface.
@@ -136,24 +136,6 @@ func (r *reviewService) Create(input review.Core, file io.Reader, handlerFilenam
 	}
 	return input.Foto, nil
 }
-
-// func (r *reviewService) Create(input review.Core, file io.Reader, handlerFilename string) (string, error) {
-
-// 	timestamp := time.Now().Unix()
-// 	fileName := fmt.Sprintf("%d_%s", timestamp, handlerFilename)
-// 	// photoFileName, errPhoto := r.UploadFileToS3(file, fileName)
-// 	localFilePath, errPhoto := r.SaveFileLocally(file, fileName)
-// 	if errPhoto != nil {
-// 		return "", errPhoto
-// 	}
-// 	input.Foto = localFilePath
-// 	// input.Foto = fmt.Sprintf("https://%s.s3.amazonaws.com/%s", r.s3BucketName, photoFileName)
-// 	err := r.reviewData.Insert(input)
-// 	if err != nil {
-// 		return "", err
-// 	}
-// 	return input.Foto, nil
-// }
 
 // GetAll implements review.ServiceInterface.
 func (r *reviewService) GetAll() ([]review.Core, error) {

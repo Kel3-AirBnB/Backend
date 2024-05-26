@@ -22,7 +22,7 @@ type DataInterface interface {
 	SelectById(id uint) (*Core, error)
 	Delete(id uint) error
 	EditById(id uint, input Core) error
-	SelectByUserID(userID uint) (*Core, error)
+	SelectByUserID(userid uint) ([]Core, error)
 	SelectByPenginapanID(penginapanID uint) ([]Core, error)
 }
 
@@ -32,6 +32,6 @@ type ServiceInterface interface {
 	GetReviews(id uint) (data *Core, err error)
 	Delete(id uint) error
 	UpdateById(id uint, input Core, file io.Reader, handlerFilename string) (string, error)
-	GetReviewsByUserID(id uint) (data *Core, rerr error)
+	GetReviewsByUserID(id uint) (data []Core, rerr error)
 	GetReviewByPenginapanID(penginapanID uint) ([]Core, error)
 }
