@@ -21,6 +21,7 @@ func New(rs review.ServiceInterface) *ReviewHandler {
 		reviewService: rs,
 	}
 }
+
 func (rh *ReviewHandler) GetAll(c echo.Context) error {
 	result, err := rh.reviewService.GetAll()
 	if err != nil {
@@ -46,6 +47,7 @@ func (rh *ReviewHandler) GetAll(c echo.Context) error {
 		"results": allReviewsResponse,
 	})
 }
+
 func (rh *ReviewHandler) CreateReview(c echo.Context) error {
 	newReview := ReviewRequest{}
 	errBind := c.Bind(&newReview)
@@ -73,6 +75,7 @@ func (rh *ReviewHandler) CreateReview(c echo.Context) error {
 
 	return c.JSON(http.StatusCreated, responses.JSONWebResponse("success add data", nil))
 }
+
 func (rh *ReviewHandler) GetById(c echo.Context) error {
 	id := c.Param("id")
 	idConv, errConv := strconv.Atoi(id)
@@ -87,6 +90,7 @@ func (rh *ReviewHandler) GetById(c echo.Context) error {
 	reviewsResponse := CoreToGorm(*reviewData)
 	return c.JSON(http.StatusOK, responses.JSONWebResponse("success get review", reviewsResponse))
 }
+
 func (rh *ReviewHandler) Delete(c echo.Context) error {
 	// id := c.Param("id")
 	id := c.Param("id")
@@ -148,8 +152,8 @@ func (rh *ReviewHandler) GetReviewsByUserID(c echo.Context) error {
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, responses.JSONWebResponse("error get review data", nil))
 	}
-	ReviewResponse := CoreToGorm(*reviewData)
-	return c.JSON(http.StatusOK, responses.JSONWebResponse("success get review by user_id", ReviewResponse))
+	// ReviewResponse := CoreToGorm(*reviewData)
+	return c.JSON(http.StatusOK, responses.JSONWebResponse("success get review by user_id", reviewData))
 }
 
 func (rh *ReviewHandler) GetReviewByPenginapanID(c echo.Context) error {
