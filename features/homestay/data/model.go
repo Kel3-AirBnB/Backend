@@ -8,6 +8,7 @@ import (
 
 type Homestay struct {
 	gorm.Model
+	UserID    uint   `json:"user_id"`
 	Name      string `json:"name"`
 	Rating    string `json:"rating"`
 	Foto      string `json:"foto"`
